@@ -115,14 +115,16 @@ const CarDetails = () => {
             
             {/* Videos */}
             {car.car_videos && car.car_videos.length > 0 && (
-              <div className="space-y-2">
-                <h3 className="font-semibold">Videos</h3>
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold">Videos</h3>
                 {car.car_videos.map((video, index) => (
                   <video 
                     key={index}
                     src={video.video_url} 
                     controls
-                    className="w-full h-48 rounded-lg"
+                    controlsList="nodownload"
+                    className="w-full h-80 rounded-xl shadow-lg bg-black"
+                    style={{ objectFit: 'contain' }}
                   />
                 ))}
               </div>
