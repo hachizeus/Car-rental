@@ -4,6 +4,7 @@ import { FeaturedCars } from "@/components/FeaturedCars";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { Stats } from "@/components/Stats";
+import { Footer } from "@/components/Footer";
 
 const Index = () => {
   return (
@@ -21,6 +22,7 @@ const Index = () => {
       <div className="animate-fade-in" style={{ animationDelay: "600ms" }}>
         <FeaturedCars />
       </div>
+      <Footer />
     </div>
   );
 };
