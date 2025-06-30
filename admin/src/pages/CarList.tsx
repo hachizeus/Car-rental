@@ -25,6 +25,25 @@ const CarList = () => {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
+      // Get car images and videos to delete from storage
+      const { data: images } = await supabase.from('car_images').select('image_url').eq('car_id', id)
+      const { data: videos } = await supabase.from('car_videos').select('video_url').eq('car_id', id)
+      
+      // Delete files from storage
+      if (images) {
+        for (const img of images) {
+          const path = img.image_url.split('/').slice(-2).join('/')
+          await supabase.storage.from('car-images').remove([path])
+        }
+      }
+      if (videos) {
+        for (const vid of videos) {
+          const path = vid.video_url.split('/').slice(-2).join('/')
+          await supabase.storage.from('car-videos').remove([path])
+        }
+      }
+      
+      // Delete car (cascade will delete related records)
       const { error } = await supabase.from('cars').delete().eq('id', id)
       if (error) throw error
     },
