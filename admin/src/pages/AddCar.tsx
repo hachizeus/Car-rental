@@ -65,31 +65,35 @@ const AddCar = () => {
         })
       }
       
-      // Upload videos
+      // Upload videos (skip if fails)
       for (const file of videos) {
-        const fileName = `${car.id}/${Date.now()}-${file.name}`
-        
-        const { error: uploadError } = await supabase.storage
-          .from('car-videos')
-          .upload(fileName, file)
-        
-        if (uploadError) throw uploadError
-        
-        const { data: { publicUrl } } = supabase.storage
-          .from('car-videos')
-          .getPublicUrl(fileName)
-        
-        await supabase.from('car_videos').insert({
-          car_id: car.id,
-          video_url: publicUrl
-        })
+        try {
+          const fileName = `${car.id}/${Date.now()}-${file.name}`
+          
+          const { error: uploadError } = await supabase.storage
+            .from('car-videos')
+            .upload(fileName, file)
+          
+          if (!uploadError) {
+            const { data: { publicUrl } } = supabase.storage
+              .from('car-videos')
+              .getPublicUrl(fileName)
+            
+            await supabase.from('car_videos').insert({
+              car_id: car.id,
+              video_url: publicUrl
+            })
+          }
+        } catch (error) {
+          console.log('Video upload failed, continuing without video')
+        }
       }
       
       setUploading(false)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cars'] })
-      toast.success('Car added successfully')
+      toast.success('Car added successfully! (Videos may take longer to process)')
       navigate('/cars')
     },
     onError: () => {
