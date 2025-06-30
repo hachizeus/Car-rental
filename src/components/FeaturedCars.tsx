@@ -1,152 +1,199 @@
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, Users, Settings, Fuel } from "lucide-react";
+import { Heart, Users, Settings, Fuel, Star, MapPin } from "lucide-react";
 
 export const FeaturedCars = () => {
   const cars = [
     {
       id: 1,
-      name: "Koenigsegg",
-      type: "Sport",
+      name: "Mercedes S-Class",
+      type: "Luxury Sedan",
       image: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=300&h=200&fit=crop",
-      fuel: "90L",
-      transmission: "Manual",
-      capacity: "2 People",
-      price: 99,
+      fuel: "Petrol",
+      transmission: "Automatic",
+      capacity: "4 Passengers",
+      price: 12000,
       originalPrice: null,
-      isLiked: true
+      rating: 4.9,
+      location: "Nairobi",
+      isLiked: true,
+      features: ["GPS", "AC", "Bluetooth"]
     },
     {
       id: 2,
-      name: "Nissan GT - R",
-      type: "Sport",
+      name: "BMW X5",
+      type: "Premium SUV",
       image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=300&h=200&fit=crop",
-      fuel: "80L",
-      transmission: "Manual",
-      capacity: "2 People",
-      price: 80,
-      originalPrice: 100,
-      isLiked: false
+      fuel: "Petrol",
+      transmission: "Automatic",
+      capacity: "7 Passengers",
+      price: 8500,
+      originalPrice: 10000,
+      rating: 4.8,
+      location: "Mombasa",
+      isLiked: false,
+      features: ["GPS", "AC", "4WD"]
     },
     {
       id: 3,
-      name: "Rolls - Royce",
-      type: "Luxury",
+      name: "Range Rover Vogue",
+      type: "Luxury SUV",
       image: "https://images.unsplash.com/photo-1563720223185-11003d516935?w=300&h=200&fit=crop",
-      fuel: "70L",
-      transmission: "Manual",
-      capacity: "4 People",
-      price: 96,
+      fuel: "Diesel",
+      transmission: "Automatic",
+      capacity: "5 Passengers",
+      price: 15000,
       originalPrice: null,
-      isLiked: true
+      rating: 4.9,
+      location: "Kisumu",
+      isLiked: true,
+      features: ["GPS", "AC", "Premium Sound"]
     },
     {
       id: 4,
-      name: "All New Rush",
-      type: "SUV",
+      name: "Toyota Prado",
+      type: "Premium SUV",
       image: "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=300&h=200&fit=crop",
-      fuel: "70L",
-      transmission: "Manual",
-      capacity: "6 People",
-      price: 72,
-      originalPrice: 80,
-      isLiked: false
+      fuel: "Diesel",
+      transmission: "Automatic",
+      capacity: "7 Passengers",
+      price: 7200,
+      originalPrice: 8000,
+      rating: 4.7,
+      location: "Nakuru",
+      isLiked: false,
+      features: ["GPS", "AC", "4WD"]
     },
     {
       id: 5,
-      name: "CR - V",
-      type: "SUV",
+      name: "Audi Q7",
+      type: "Luxury SUV",
       image: "https://images.unsplash.com/photo-1549399535-8e8d1a81ad0b?w=300&h=200&fit=crop",
-      fuel: "80L",
-      transmission: "Manual",
-      capacity: "6 People",
-      price: 80,
+      fuel: "Petrol",
+      transmission: "Automatic",
+      capacity: "7 Passengers",
+      price: 9500,
       originalPrice: null,
-      isLiked: true
+      rating: 4.8,
+      location: "Eldoret",
+      isLiked: true,
+      features: ["GPS", "AC", "Premium Interior"]
     },
     {
       id: 6,
-      name: "All New Terios",
-      type: "SUV",
+      name: "Lexus LX 570",
+      type: "Ultra Luxury SUV",
       image: "https://images.unsplash.com/photo-1596008194705-2091cd6764d4?w=300&h=200&fit=crop",
-      fuel: "90L",
-      transmission: "Manual",
-      capacity: "6 People",
-      price: 74,
+      fuel: "Petrol",
+      transmission: "Automatic",
+      capacity: "8 Passengers",
+      price: 18000,
       originalPrice: null,
-      isLiked: false
+      rating: 4.9,
+      location: "Nairobi",
+      isLiked: false,
+      features: ["GPS", "AC", "Premium Package"]
     }
   ];
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900">Popular Car</h2>
-          <Button variant="link" className="text-blue-600 font-medium">
-            View All
-          </Button>
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Premium Fleet</h2>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Choose from our carefully selected collection of luxury vehicles, each maintained to the highest standards
+          </p>
         </div>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {cars.map((car) => (
-            <Card key={car.id} className="p-6 border-0 shadow-lg hover:shadow-xl transition-shadow rounded-2xl">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900">{car.name}</h3>
-                  <p className="text-gray-600">{car.type}</p>
-                </div>
-                <Button variant="ghost" size="sm" className="p-1">
-                  <Heart className={`w-5 h-5 ${car.isLiked ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} />
-                </Button>
-              </div>
-              
-              <div className="mb-6">
+            <Card key={car.id} className="group bg-white border-0 shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl overflow-hidden hover:-translate-y-2">
+              <div className="relative overflow-hidden">
                 <img 
                   src={car.image} 
                   alt={car.name}
-                  className="w-full h-48 object-cover rounded-xl"
+                  className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-300"
                 />
-              </div>
-              
-              <div className="flex justify-between text-gray-600 text-sm mb-6">
-                <div className="flex items-center space-x-1">
-                  <Fuel className="w-4 h-4" />
-                  <span>{car.fuel}</span>
+                <div className="absolute top-4 right-4">
+                  <Button variant="ghost" size="sm" className="p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white">
+                    <Heart className={`w-5 h-5 ${car.isLiked ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
+                  </Button>
                 </div>
-                <div className="flex items-center space-x-1">
-                  <Settings className="w-4 h-4" />
-                  <span>{car.transmission}</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <Users className="w-4 h-4" />
-                  <span>{car.capacity}</span>
+                <div className="absolute top-4 left-4">
+                  <div className="bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                    Available
+                  </div>
                 </div>
               </div>
               
-              <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-2">
-                  <span className="text-2xl font-bold text-gray-900">${car.price}.00/day</span>
-                  {car.originalPrice && (
-                    <span className="text-gray-400 line-through">${car.originalPrice}.00</span>
-                  )}
+              <div className="p-6 space-y-4">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors">{car.name}</h3>
+                    <p className="text-emerald-600 font-semibold">{car.type}</p>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                    <span className="text-sm font-semibold text-gray-700">{car.rating}</span>
+                  </div>
                 </div>
-                <Button className="bg-blue-600 hover:bg-blue-700">
-                  Rent Now
-                </Button>
+                
+                <div className="flex items-center space-x-2 text-gray-600">
+                  <MapPin className="w-4 h-4 text-emerald-600" />
+                  <span className="text-sm font-medium">{car.location}</span>
+                </div>
+                
+                <div className="grid grid-cols-3 gap-4 text-sm text-gray-600">
+                  <div className="flex items-center space-x-2">
+                    <Fuel className="w-4 h-4 text-emerald-600" />
+                    <span className="font-medium">{car.fuel}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Settings className="w-4 h-4 text-emerald-600" />
+                    <span className="font-medium">{car.transmission}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Users className="w-4 h-4 text-emerald-600" />
+                    <span className="font-medium">{car.capacity}</span>
+                  </div>
+                </div>
+                
+                <div className="flex flex-wrap gap-2">
+                  {car.features.map((feature, index) => (
+                    <span key={index} className="bg-emerald-50 text-emerald-700 px-2 py-1 rounded-lg text-xs font-medium">
+                      {feature}
+                    </span>
+                  ))}
+                </div>
+                
+                <div className="border-t pt-4">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-baseline space-x-2">
+                      <span className="text-2xl font-bold text-emerald-600">KSH {car.price.toLocaleString()}</span>
+                      <span className="text-gray-600">/day</span>
+                      {car.originalPrice && (
+                        <span className="text-gray-400 line-through text-sm">KSH {car.originalPrice.toLocaleString()}</span>
+                      )}
+                    </div>
+                  </div>
+                  <Button className="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl">
+                    Book Now
+                  </Button>
+                </div>
               </div>
             </Card>
           ))}
         </div>
         
-        <div className="text-center mt-12">
+        <div className="text-center mt-16">
           <Button 
             size="lg" 
             variant="outline" 
-            className="px-8 py-4 text-blue-600 border-blue-600 hover:bg-blue-50"
+            className="px-12 py-4 text-emerald-600 border-2 border-emerald-600 hover:bg-emerald-600 hover:text-white font-semibold rounded-xl"
           >
-            Show more car
+            View All Vehicles
           </Button>
         </div>
       </div>
