@@ -115,7 +115,16 @@ const AddCar = () => {
   
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setVideos(Array.from(e.target.files))
+      const files = Array.from(e.target.files)
+      const maxSize = 50 * 1024 * 1024 // 50MB
+      const validFiles = files.filter(file => {
+        if (file.size > maxSize) {
+          toast.error(`${file.name} is too large. Max size is 50MB.`)
+          return false
+        }
+        return true
+      })
+      setVideos(validFiles)
     }
   }
   
@@ -235,7 +244,7 @@ const AddCar = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Videos</label>
+              <label className="block text-sm font-medium mb-2">Videos (Max 50MB each)</label>
               <div className="space-y-2">
                 <input
                   type="file"
