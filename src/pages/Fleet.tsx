@@ -4,8 +4,11 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Users, Fuel, Settings, Star } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Fleet = () => {
+  const navigate = useNavigate();
+
   const cars = [
     {
       id: 1,
@@ -71,6 +74,10 @@ const Fleet = () => {
 
   const categories = ["All", "Sedan", "SUV", "Luxury"];
 
+  const handleCarClick = (carId: number) => {
+    navigate(`/car/${carId}`);
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <Header />
@@ -113,7 +120,12 @@ const Fleet = () => {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {cars.map((car, index) => (
-              <Card key={car.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 group animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+              <Card 
+                key={car.id} 
+                className="overflow-hidden hover:shadow-xl transition-all duration-300 group animate-fade-in cursor-pointer" 
+                style={{ animationDelay: `${index * 100}ms` }}
+                onClick={() => handleCarClick(car.id)}
+              >
                 <div className="relative">
                   <img 
                     src={car.image} 
@@ -156,6 +168,12 @@ const Fleet = () => {
                     <Button 
                       className="bg-emerald-600 hover:bg-emerald-700"
                       disabled={!car.available}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (car.available) {
+                          handleCarClick(car.id);
+                        }
+                      }}
                     >
                       {car.available ? "Book Now" : "Unavailable"}
                     </Button>

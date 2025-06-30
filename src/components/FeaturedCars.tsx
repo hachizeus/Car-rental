@@ -1,9 +1,11 @@
-
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart, Users, Settings, Fuel, Star, MapPin } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const FeaturedCars = () => {
+  const navigate = useNavigate();
+
   const cars = [
     {
       id: 1,
@@ -97,6 +99,10 @@ export const FeaturedCars = () => {
     }
   ];
 
+  const handleCarClick = (carId: number) => {
+    navigate(`/car/${carId}`);
+  };
+
   return (
     <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
@@ -109,7 +115,11 @@ export const FeaturedCars = () => {
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {cars.map((car) => (
-            <Card key={car.id} className="group bg-white border-0 shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl overflow-hidden hover:-translate-y-2">
+            <Card 
+              key={car.id} 
+              className="group bg-white border-0 shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl overflow-hidden hover:-translate-y-2 cursor-pointer"
+              onClick={() => handleCarClick(car.id)}
+            >
               <div className="relative overflow-hidden">
                 <img 
                   src={car.image} 
@@ -117,7 +127,12 @@ export const FeaturedCars = () => {
                   className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-300"
                 />
                 <div className="absolute top-4 right-4">
-                  <Button variant="ghost" size="sm" className="p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <Heart className={`w-5 h-5 ${car.isLiked ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
                   </Button>
                 </div>
@@ -178,7 +193,13 @@ export const FeaturedCars = () => {
                       )}
                     </div>
                   </div>
-                  <Button className="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl">
+                  <Button 
+                    className="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCarClick(car.id);
+                    }}
+                  >
                     Book Now
                   </Button>
                 </div>
@@ -192,6 +213,7 @@ export const FeaturedCars = () => {
             size="lg" 
             variant="outline" 
             className="px-12 py-4 text-emerald-600 border-2 border-emerald-600 hover:bg-emerald-600 hover:text-white font-semibold rounded-xl"
+            onClick={() => navigate('/fleet')}
           >
             View All Vehicles
           </Button>
