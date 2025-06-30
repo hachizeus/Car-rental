@@ -24,8 +24,8 @@ export const Stats = () => {
         
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((stat, index) => (
-            <div key={index} className="text-center group">
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:bg-white/20 transition-all duration-300 group-hover:scale-105">
+            <div key={index} className="text-center group animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:bg-white/20 transition-all duration-300 group-hover:scale-105 hover-lift">
                 <div className="text-5xl font-bold text-white mb-3">{stat.number}</div>
                 <div className="text-emerald-100 font-bold text-lg mb-2">{stat.label}</div>
                 <div className="text-emerald-200 text-sm">{stat.description}</div>

@@ -7,12 +7,20 @@ import { Stats } from "@/components/Stats";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       <Header />
-      <Hero />
-      <SearchForm />
-      <Stats />
-      <FeaturedCars />
+      <div className="animate-fade-in">
+        <Hero />
+      </div>
+      <div className="animate-fade-in" style={{ animationDelay: "200ms" }}>
+        <SearchForm />
+      </div>
+      <div className="animate-fade-in" style={{ animationDelay: "400ms" }}>
+        <Stats />
+      </div>
+      <div className="animate-fade-in" style={{ animationDelay: "600ms" }}>
+        <FeaturedCars />
+      </div>
     </div>
   );
 };
