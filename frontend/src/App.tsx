@@ -5,6 +5,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { HelmetProvider } from "react-helmet-async";
+import { LoadingProvider } from "@/contexts/LoadingContext";
 import Index from "./pages/Index";
 import Fleet from "./pages/Fleet";
 import Services from "./pages/Services";
@@ -17,11 +19,13 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider defaultTheme="light" storageKey="morent-ui-theme">
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
+    <HelmetProvider>
+      <LoadingProvider>
+        <ThemeProvider defaultTheme="light" storageKey="morent-ui-theme">
+          <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/fleet" element={<Fleet />} />
@@ -32,9 +36,11 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </ThemeProvider>
+          </BrowserRouter>
+          </TooltipProvider>
+        </ThemeProvider>
+      </LoadingProvider>
+    </HelmetProvider>
   </QueryClientProvider>
 );
 

@@ -1,6 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { trackCarView } from "@/lib/analytics";
+import { useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -30,12 +32,18 @@ const CarDetails = () => {
     enabled: !!id
   });
 
+  useEffect(() => {
+    if (car && id) {
+      trackCarView(id, car.title);
+    }
+  }, [car, id]);
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white dark:bg-gray-900">
         <Header />
         <div className="py-20 text-center">
-          <p className="text-xl text-gray-600">Loading car details...</p>
+          <p className="text-xl text-gray-600 dark:text-gray-300">Loading car details...</p>
         </div>
         <Footer />
       </div>
@@ -44,10 +52,10 @@ const CarDetails = () => {
 
   if (!car) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white dark:bg-gray-900">
         <Header />
         <div className="py-20 text-center">
-          <p className="text-xl text-gray-600">Car not found</p>
+          <p className="text-xl text-gray-600 dark:text-gray-300">Car not found</p>
           <Button onClick={() => navigate('/fleet')} className="mt-4">
             Back to Fleet
           </Button>
@@ -58,7 +66,7 @@ const CarDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-[#141414]">
       <Header />
       
       <div className="container mx-auto px-4 py-8">
@@ -89,7 +97,7 @@ const CarDetails = () => {
                   </div>
                 )
               })()}
-              <Badge className="absolute top-4 left-4 bg-emerald-600">
+              <Badge className="absolute top-4 left-4 bg-brand-600">
                 {car.category}
               </Badge>
               {car.is_available && (
@@ -116,7 +124,7 @@ const CarDetails = () => {
             {/* Videos */}
             {car.car_videos && car.car_videos.length > 0 && (
               <div className="space-y-4">
-                <h3 className="text-xl font-semibold">Videos</h3>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Videos</h3>
                 {car.car_videos.map((video, index) => (
                   <video 
                     key={index}
@@ -134,30 +142,23 @@ const CarDetails = () => {
           {/* Car Details */}
           <div className="space-y-6">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">{car.title}</h1>
-              <div className="flex items-center space-x-4 text-gray-600">
-                <div className="flex items-center space-x-1">
-                  <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                  <span className="font-semibold">4.8</span>
-                  <span>(120+ reviews)</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <MapPin className="w-4 h-4 text-emerald-600" />
-                  <span>{car.location}</span>
-                </div>
+              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">{car.title}</h1>
+              <div className="flex items-center space-x-1 text-gray-600 dark:text-gray-300">
+                <MapPin className="w-4 h-4 text-brand-600" />
+                <span>{car.location}</span>
               </div>
             </div>
 
-            <p className="text-gray-600 text-lg leading-relaxed">
+            <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
               {car.description}
             </p>
 
             {/* Features */}
             <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Features</h3>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Features</h3>
               <div className="flex flex-wrap gap-2">
                 {car.features?.map((feature, index) => (
-                  <Badge key={index} variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">
+                  <Badge key={index} variant="outline" className="bg-brand-50 text-brand-700 border-brand-200">
                     {feature}
                   </Badge>
                 ))}
@@ -165,54 +166,74 @@ const CarDetails = () => {
             </div>
 
             {/* Specifications */}
-            <Card>
+            <Card className="bg-white dark:bg-[#1a1a1a] border-gray-200 dark:border-gray-600">
               <CardContent className="p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Specifications</h3>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Specifications</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex items-center space-x-3">
-                    <Users className="w-5 h-5 text-emerald-600" />
+                    <Users className="w-5 h-5 text-brand-600" />
                     <div>
-                      <p className="text-sm text-gray-600">Passengers</p>
-                      <p className="font-semibold">5 People</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Passengers</p>
+                      <p className="font-semibold text-gray-900 dark:text-white">{car.seats || 5} People</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Settings className="w-5 h-5 text-emerald-600" />
+                    <Settings className="w-5 h-5 text-brand-600" />
                     <div>
-                      <p className="text-sm text-gray-600">Transmission</p>
-                      <p className="font-semibold">Automatic</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Transmission</p>
+                      <p className="font-semibold text-gray-900 dark:text-white">{car.transmission || 'Automatic'}</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Fuel className="w-5 h-5 text-emerald-600" />
+                    <Fuel className="w-5 h-5 text-brand-600" />
                     <div>
-                      <p className="text-sm text-gray-600">Fuel Type</p>
-                      <p className="font-semibold">Petrol</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Fuel Type</p>
+                      <p className="font-semibold text-gray-900 dark:text-white">{car.fuel_type || 'Petrol'}</p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <MapPin className="w-5 h-5 text-emerald-600" />
-                    <div>
-                      <p className="text-sm text-gray-600">Location</p>
-                      <p className="font-semibold">{car.location}</p>
+                  {car.engine && (
+                    <div className="flex items-center space-x-3">
+                      <Settings className="w-5 h-5 text-brand-600" />
+                      <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Engine</p>
+                        <p className="font-semibold text-gray-900 dark:text-white">{car.engine}</p>
+                      </div>
                     </div>
-                  </div>
+                  )}
+                  {car.year && (
+                    <div className="flex items-center space-x-3">
+                      <MapPin className="w-5 h-5 text-brand-600" />
+                      <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Year</p>
+                        <p className="font-semibold text-gray-900 dark:text-white">{car.year}</p>
+                      </div>
+                    </div>
+                  )}
+                  {car.mileage && (
+                    <div className="flex items-center space-x-3">
+                      <Fuel className="w-5 h-5 text-brand-600" />
+                      <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Mileage</p>
+                        <p className="font-semibold text-gray-900 dark:text-white">{car.mileage}</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
 
             {/* Quick Info */}
-            <Card className="bg-emerald-50 border-emerald-200">
+            <Card className="bg-brand-50 dark:bg-brand-900/20 border-brand-200 dark:border-brand-800">
               <CardContent className="p-6">
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="text-sm text-gray-600">Price per day</p>
-                    <p className="text-3xl font-bold text-emerald-600">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Price per day</p>
+                    <p className="text-3xl font-bold text-brand-600">
                       KSh {car.price_per_day.toLocaleString()}
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm text-gray-600">Status</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Status</p>
                     <p className={`font-semibold ${car.is_available ? 'text-green-600' : 'text-red-600'}`}>
                       {car.is_available ? 'Available' : 'Not Available'}
                     </p>
@@ -226,10 +247,10 @@ const CarDetails = () => {
         {/* WhatsApp Booking */}
         {car.is_available && (
           <div className="mt-12 text-center">
-            <Card className="bg-emerald-50 border-emerald-200 max-w-md mx-auto">
+            <Card className="bg-brand-50 dark:bg-brand-900/20 border-brand-200 dark:border-brand-800 max-w-md mx-auto">
               <CardContent className="p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Ready to Book?</h3>
-                <p className="text-gray-600 mb-6">Contact us directly on WhatsApp to book this car</p>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Ready to Book?</h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-6">Contact us directly on WhatsApp to book this car</p>
                 <Button 
                   onClick={() => {
                     const message = `Hi! I'm interested in booking the ${car.title}\n\n` +
@@ -243,7 +264,7 @@ const CarDetails = () => {
                     const whatsappUrl = `https://wa.me/254720813111?text=${encodeURIComponent(message)}`;
                     window.open(whatsappUrl, '_blank');
                   }}
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-lg py-3"
+                  className="w-full bg-brand-600 hover:bg-brand-700 text-lg py-3"
                 >
                   Book Now via WhatsApp
                 </Button>

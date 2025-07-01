@@ -1,40 +1,147 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom"
 import { Toaster } from "sonner"
+import { Car, LayoutDashboard, Plus, LogOut } from "lucide-react"
+import logo from "@/assets/images/logo.png"
 import Dashboard from "./pages/Dashboard"
 import CarList from "./pages/CarList"
 import AddCar from "./pages/AddCar"
 import EditCar from "./pages/EditCar"
-
+import { useQuery } from "@tanstack/react-query"
+import { supabase } from "@/lib/supabase"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Eye, CarFront } from "lucide-react"
 
 const queryClient = new QueryClient()
+
+const Sidebar = () => {
+  const location = useLocation()
+  
+  const menuItems = [
+    { path: "/", icon: LayoutDashboard, label: "Dashboard" },
+    { path: "/cars", icon: Car, label: "Cars" },
+  ]
+
+  return (
+    <div className="w-64 bg-gray-900 text-white h-screen fixed left-0 top-0 flex flex-col border-r border-gray-700">
+      {/* Logo */}
+      <div className="p-6 border-b border-gray-700">
+        <div className="flex items-center space-x-2">
+          <img src={logo} alt="PattRentals Logo" className="w-8 h-8" />
+          <div className="text-xl font-bold text-white">
+            Pattrentals
+          </div>
+        </div>
+        <p className="text-gray-400 text-sm mt-1">Admin Panel</p>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 p-4">
+        <ul className="space-y-2">
+          {menuItems.map((item) => {
+            const isActive = location.pathname === item.path
+            return (
+              <li key={item.path}>
+                <Link
+                  to={item.path}
+                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 ${
+                    isActive
+                      ? 'bg-red-600 text-white'
+                      : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                  }`}
+                >
+                  <item.icon className="w-5 h-5" />
+                  <span className="font-medium">{item.label}</span>
+                </Link>
+              </li>
+            )
+          })}
+        </ul>
+      </nav>
+
+
+    </div>
+  )
+}
+
+const TopBar = () => {
+  return (
+    <div className="ml-64 bg-gray-800 text-white h-16 flex items-center justify-between px-6 shadow-lg">
+      <div className="flex items-center space-x-4">
+        <h1 className="text-xl font-semibold">Admin Dashboard</h1>
+      </div>
+      
+      <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2">
+          <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
+            <span className="text-sm font-semibold">A</span>
+          </div>
+          <span className="text-sm font-medium">Admin User</span>
+        </div>
+        
+        <button className="flex items-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors duration-200">
+          <LogOut className="w-4 h-4" />
+          <span className="font-medium">Logout</span>
+        </button>
+      </div>
+    </div>
+  )
+}
+
+const DashboardWithAnalytics = () => {
+  const { data: stats } = useQuery({
+    queryKey: ['dashboard-analytics'],
+    queryFn: async () => {
+      const { count: totalViews } = await supabase
+        .from('page_views')
+        .select('*', { count: 'exact', head: true })
+
+      const { count: carViews } = await supabase
+        .from('car_views')
+        .select('*', { count: 'exact', head: true })
+
+      const { data: topCars } = await supabase
+        .from('car_views')
+        .select('car_title')
+        .order('timestamp', { ascending: false })
+        .limit(50)
+
+      const carViewCounts = topCars?.reduce((acc, view) => {
+        acc[view.car_title] = (acc[view.car_title] || 0) + 1
+        return acc
+      }, {} as Record<string, number>) || {}
+
+      const mostViewedCars = Object.entries(carViewCounts)
+        .sort(([,a], [,b]) => b - a)
+        .slice(0, 3)
+        .map(([title, views]) => ({ title, views }))
+
+      return {
+        totalViews: totalViews || 0,
+        carViews: carViews || 0,
+        mostViewedCars
+      }
+    }
+  })
+
+  return <Dashboard stats={stats} />
+}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-50">
-        <nav className="bg-white shadow-sm border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16">
-              <div className="flex items-center space-x-8">
-                <Link to="/" className="text-xl font-semibold text-gray-900">Car Rental Admin</Link>
-                <div className="hidden md:flex space-x-4">
-                  <Link to="/" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md">Dashboard</Link>
-                  <Link to="/cars" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md">Cars</Link>
-
-                  <Link to="/cars/add" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md">Add Car</Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </nav>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/cars" element={<CarList />} />
-
-          <Route path="/cars/add" element={<AddCar />} />
-          <Route path="/cars/edit/:id" element={<EditCar />} />
-        </Routes>
+      <div className="min-h-screen bg-gray-900">
+        <Sidebar />
+        <TopBar />
+        
+        <main className="ml-64 pt-4 p-6">
+          <Routes>
+            <Route path="/" element={<DashboardWithAnalytics />} />
+            <Route path="/cars" element={<CarList />} />
+            <Route path="/cars/add" element={<AddCar />} />
+            <Route path="/cars/edit/:id" element={<EditCar />} />
+          </Routes>
+        </main>
       </div>
       <Toaster />
     </BrowserRouter>

@@ -1,14 +1,18 @@
+User-agent: *
+Allow: /
+
+# Specific crawling instructions
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 1
 
-User-agent: Twitterbot
-Allow: /
+# Block admin areas
+Disallow: /admin/
+Disallow: /api/
 
-User-agent: facebookexternalhit
-Allow: /
-
-User-agent: *
-Allow: /
+# Sitemap location
+Sitemap: https://pattrentals.com/sitemap.xml

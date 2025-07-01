@@ -1,82 +1,155 @@
 
 import { Button } from "@/components/ui/button";
-import { Phone, Mail, Facebook, Twitter, Instagram, Linkedin, Car } from "lucide-react";
+import { Car, ChevronDown, Sun, Moon } from "lucide-react";
 import { MobileMenu } from "@/components/MobileMenu";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useTheme } from "@/components/ThemeProvider";
+import logo from "@/assets/images/logo.png";
 
 export const Header = () => {
-  const socialLinks = [
-    { icon: Facebook, href: "#", label: "Facebook" },
-    { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Instagram, href: "#", label: "Instagram" },
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
-  ];
+  const [themeDropdown, setThemeDropdown] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+
+  const toggleTheme = (newTheme: 'light' | 'dark') => {
+    setTheme(newTheme);
+    setThemeDropdown(false);
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setThemeDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
-    <>
-      {/* Top bar with contact info */}
-      <div className="bg-gray-900 text-white py-2 hidden md:block">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center text-sm">
-            <div className="flex items-center space-x-6">
-              <div className="flex items-center space-x-2">
-                <Phone className="w-4 h-4" />
-                <span>+254 700 000 000</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Mail className="w-4 h-4" />
-                <span>info@morent.co.ke</span>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span>Open Hours: Mon - Fri 8:00 AM - 6:00 PM</span>
-              <div className="flex items-center space-x-2">
-                {socialLinks.map((social, index) => (
-                  <a
-                    key={index}
-                    href={social.href}
-                    className="w-6 h-6 bg-gray-700 rounded-full flex items-center justify-center hover:bg-emerald-600 transition-colors"
-                    aria-label={social.label}
-                  >
-                    <social.icon className="w-3 h-3" />
-                  </a>
-                ))}
-              </div>
-            </div>
+    <header className="bg-white/95 dark:bg-[#141414]/95 backdrop-blur-md shadow-soft sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700 transition-all duration-300">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-1.5 sm:py-2 flex items-center justify-between">
+        <Link to="/" className="flex items-center space-x-2 group">
+          <img 
+            src={logo} 
+            alt="Pattrentals Logo" 
+            className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform duration-300"
+          />
+          <div className="text-base sm:text-lg font-bold bg-gradient-to-r from-gray-900 dark:from-white via-brand-600 to-gray-900 dark:to-white bg-clip-text text-transparent">
+            Pattrentals
           </div>
+        </Link>
+        
+        <nav className="hidden lg:flex items-center justify-center space-x-4 xl:space-x-6 absolute left-1/2 transform -translate-x-1/2">
+          <Link 
+            to="/" 
+            className={`relative transition-all duration-300 font-medium text-sm py-1.5 px-2 rounded-lg group ${
+              location.pathname === '/' 
+                ? 'text-brand-600 bg-brand-50 dark:bg-brand-900/20' 
+                : 'text-gray-700 dark:text-gray-300 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-900/20'
+            }`}
+          >
+            Home
+            <span className={`absolute bottom-1 left-1/2 transform -translate-x-1/2 h-0.5 transition-all duration-300 ${
+              location.pathname === '/' ? 'w-4 bg-brand-600' : 'w-0 bg-brand-600 group-hover:w-4'
+            }`}></span>
+          </Link>
+          <Link 
+            to="/fleet" 
+            className={`relative transition-all duration-300 font-medium text-sm py-1.5 px-2 rounded-lg group ${
+              location.pathname === '/fleet' 
+                ? 'text-brand-600 bg-brand-50 dark:bg-brand-900/20' 
+                : 'text-gray-700 dark:text-gray-300 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-900/20'
+            }`}
+          >
+            Fleet
+            <span className={`absolute bottom-1 left-1/2 transform -translate-x-1/2 h-0.5 transition-all duration-300 ${
+              location.pathname === '/fleet' ? 'w-4 bg-brand-600' : 'w-0 bg-brand-600 group-hover:w-4'
+            }`}></span>
+          </Link>
+          <Link 
+            to="/services" 
+            className={`relative transition-all duration-300 font-medium text-sm py-1.5 px-2 rounded-lg group ${
+              location.pathname === '/services' 
+                ? 'text-brand-600 bg-brand-50 dark:bg-brand-900/20' 
+                : 'text-gray-700 dark:text-gray-300 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-900/20'
+            }`}
+          >
+            Services
+            <span className={`absolute bottom-1 left-1/2 transform -translate-x-1/2 h-0.5 transition-all duration-300 ${
+              location.pathname === '/services' ? 'w-4 bg-brand-600' : 'w-0 bg-brand-600 group-hover:w-4'
+            }`}></span>
+          </Link>
+          <Link 
+            to="/about" 
+            className={`relative transition-all duration-300 font-medium text-sm py-1.5 px-2 rounded-lg group ${
+              location.pathname === '/about' 
+                ? 'text-brand-600 bg-brand-50 dark:bg-brand-900/20' 
+                : 'text-gray-700 dark:text-gray-300 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-900/20'
+            }`}
+          >
+            About
+            <span className={`absolute bottom-1 left-1/2 transform -translate-x-1/2 h-0.5 transition-all duration-300 ${
+              location.pathname === '/about' ? 'w-4 bg-brand-600' : 'w-0 bg-brand-600 group-hover:w-4'
+            }`}></span>
+          </Link>
+          <Link 
+            to="/contact" 
+            className={`relative transition-all duration-300 font-medium text-sm py-1.5 px-2 rounded-lg group ${
+              location.pathname === '/contact' 
+                ? 'text-brand-600 bg-brand-50 dark:bg-brand-900/20' 
+                : 'text-gray-700 dark:text-gray-300 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-900/20'
+            }`}
+          >
+            Contact
+            <span className={`absolute bottom-1 left-1/2 transform -translate-x-1/2 h-0.5 transition-all duration-300 ${
+              location.pathname === '/contact' ? 'w-4 bg-brand-600' : 'w-0 bg-brand-600 group-hover:w-4'
+            }`}></span>
+          </Link>
+        </nav>
+        
+        <div className="flex items-center space-x-2 sm:space-x-4">
+          <div className="relative hidden sm:block" ref={dropdownRef}>
+            <button
+              onClick={() => setThemeDropdown(!themeDropdown)}
+              className="flex items-center space-x-1 text-gray-700 dark:text-gray-300 hover:text-brand-600 transition-all duration-300 font-medium text-sm py-1.5 px-2 rounded-lg hover:bg-brand-50 dark:hover:bg-brand-900/20 shadow-soft hover:shadow-medium"
+            >
+              {theme === 'light' ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
+              <span className="capitalize hidden sm:inline text-xs">{theme}</span>
+              <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${themeDropdown ? 'rotate-180' : ''}`} />
+            </button>
+            {themeDropdown && (
+              <div className="absolute right-0 mt-2 w-36 sm:w-40 glass dark:glass-dark rounded-xl shadow-strong z-50 animate-scale-in">
+                <button
+                  onClick={() => toggleTheme('light')}
+                  className={`flex items-center space-x-2 w-full px-4 py-3 text-left hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-all duration-300 rounded-lg ${
+                    theme === 'light' ? 'bg-brand-50 dark:bg-brand-900/20 text-brand-600' : 'text-gray-700 dark:text-gray-300'
+                  }`}
+                >
+                  <Sun className="w-4 h-4" />
+                  <span>Light Mode</span>
+                </button>
+                <button
+                  onClick={() => toggleTheme('dark')}
+                  className={`flex items-center space-x-2 w-full px-4 py-3 text-left hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-all duration-300 rounded-lg ${
+                    theme === 'dark' ? 'bg-brand-50 dark:bg-brand-900/20 text-brand-600' : 'text-gray-700 dark:text-gray-300'
+                  }`}
+                >
+                  <Moon className="w-4 h-4" />
+                  <span>Dark Mode</span>
+                </button>
+              </div>
+            )}
+          </div>
+          <MobileMenu />
         </div>
       </div>
-      
-      {/* Main header */}
-      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-8">
-            <Link to="/" className="flex items-center space-x-2">
-              <Car className="w-8 h-8 text-emerald-600" />
-              <div className="text-3xl font-bold text-gray-900 dark:text-white">
-                <span className="text-emerald-600">MO</span>RENT
-              </div>
-            </Link>
-            <nav className="hidden lg:flex items-center space-x-8">
-              <Link to="/" className="text-gray-700 dark:text-gray-300 hover:text-emerald-600 transition-colors font-medium">Home</Link>
-              <Link to="/fleet" className="text-gray-700 dark:text-gray-300 hover:text-emerald-600 transition-colors font-medium flex items-center space-x-1">
-                <Car className="w-4 h-4" />
-                <span>All Cars</span>
-              </Link>
-              <Link to="/services" className="text-gray-700 dark:text-gray-300 hover:text-emerald-600 transition-colors font-medium">Services</Link>
-              <Link to="/about" className="text-gray-700 dark:text-gray-300 hover:text-emerald-600 transition-colors font-medium">About</Link>
-              <Link to="/contact" className="text-gray-700 dark:text-gray-300 hover:text-emerald-600 transition-colors font-medium">Contact</Link>
-            </nav>
-          </div>
-          
-          <div className="flex items-center space-x-4">
-            <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 hidden md:flex">
-              Get Quote
-            </Button>
-            <MobileMenu />
-          </div>
-        </div>
-      </header>
-    </>
+    </header>
   );
 };

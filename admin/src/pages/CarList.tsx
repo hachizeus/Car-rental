@@ -43,6 +43,9 @@ const CarList = () => {
         }
       }
       
+      // Delete car views
+      await supabase.from('car_views').delete().eq('car_id', id)
+      
       // Delete car (cascade will delete related records)
       const { error } = await supabase.from('cars').delete().eq('id', id)
       if (error) throw error
@@ -59,11 +62,11 @@ const CarList = () => {
   if (isLoading) return <div className="p-8">Loading...</div>
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Cars</h1>
-          <p className="text-gray-600">Manage your car inventory</p>
+          <h1 className="text-3xl font-bold text-white">Cars</h1>
+          <p className="text-gray-300">Manage your car inventory</p>
         </div>
         <Button asChild>
           <Link to="/cars/add">
@@ -77,7 +80,7 @@ const CarList = () => {
         {cars?.map((car) => {
           const primaryImage = car.car_images?.find(img => img.is_primary)?.image_url
           return (
-          <Card key={car.id}>
+          <Card key={car.id} className="bg-gray-800 border-gray-700">
             {primaryImage && (
               <div className="h-48 overflow-hidden">
                 <img 
@@ -88,23 +91,23 @@ const CarList = () => {
               </div>
             )}
             <CardHeader>
-              <CardTitle className="text-lg">{car.title}</CardTitle>
-              <div className="flex justify-between text-sm text-gray-600">
+              <CardTitle className="text-lg text-white">{car.title}</CardTitle>
+              <div className="flex justify-between text-sm text-gray-300">
                 <span>{car.category}</span>
-                <span className={car.is_available ? 'text-green-600' : 'text-red-600'}>
+                <span className={car.is_available ? 'text-green-400' : 'text-red-400'}>
                   {car.is_available ? 'Available' : 'Unavailable'}
                 </span>
               </div>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600 mb-4 line-clamp-2">{car.description}</p>
+              <p className="text-gray-300 mb-4 line-clamp-2">{car.description}</p>
               <div className="flex justify-between items-center mb-4">
-                <span className="text-2xl font-bold text-green-600">
+                <span className="text-2xl font-bold text-red-500">
                   KSh {car.price_per_day.toLocaleString()}/day
                 </span>
               </div>
               <div className="flex gap-2">
-                <Button asChild size="sm" variant="outline" className="flex-1">
+                <Button asChild size="sm" className="flex-1 bg-red-600 hover:bg-red-700 text-white border-0">
                   <Link to={`/cars/edit/${car.id}`}>
                     <Edit className="mr-2 h-4 w-4" />
                     Edit
@@ -113,7 +116,11 @@ const CarList = () => {
                 <Button 
                   size="sm" 
                   variant="destructive"
-                  onClick={() => deleteMutation.mutate(car.id)}
+                  onClick={() => {
+                    if (window.confirm(`Are you sure you want to delete "${car.title}"? This action cannot be undone.`)) {
+                      deleteMutation.mutate(car.id)
+                    }
+                  }}
                   disabled={deleteMutation.isPending}
                 >
                   <Trash2 className="h-4 w-4" />
@@ -126,8 +133,8 @@ const CarList = () => {
 
       {cars?.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-500 mb-4">No cars found</p>
-          <Button asChild>
+          <p className="text-gray-400 mb-4">No cars found</p>
+          <Button asChild className="bg-red-600 hover:bg-red-700">
             <Link to="/cars/add">Add your first car</Link>
           </Button>
         </div>
