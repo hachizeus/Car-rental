@@ -20,20 +20,7 @@ const Dashboard = () => {
   const availableCars = cars?.filter(car => car.is_available).length || 0
   const rentedCars = totalCars - availableCars
   
-  // Mock analytics data
-  const analyticsData = {
-    dailyVisits: [
-      { day: 'Sun', visits: 0 },
-      { day: 'Mon', visits: 0 },
-      { day: 'Tue', visits: 0 },
-      { day: 'Wed', visits: 0 },
-      { day: 'Thu', visits: 0 },
-      { day: 'Fri', visits: 0 },
-      { day: 'Sat', visits: 0 }
-    ],
-    totalVisits: 0,
-    totalUsers: 0
-  }
+
 
 
   return (
@@ -43,7 +30,7 @@ const Dashboard = () => {
         <p className="text-gray-300">Manage your car rental fleet</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <Card className="bg-gray-800 border-gray-700">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-300">Total Cars</CardTitle>
@@ -66,61 +53,11 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gray-800 border-gray-700">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-300">Website Visits</CardTitle>
-            <Eye className="h-4 w-4 text-blue-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-white">0</div>
-            <p className="text-xs text-gray-400 mt-1">This week</p>
-          </CardContent>
-        </Card>
 
-        <Card className="bg-gray-800 border-gray-700">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-300">Car Views</CardTitle>
-            <Users className="h-4 w-4 text-purple-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-white">0</div>
-            <p className="text-xs text-gray-400 mt-1">Car detail views</p>
-          </CardContent>
-        </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        {/* Daily Visits Chart */}
-        <Card className="bg-gray-800 border-gray-700">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-red-500" />
-              Daily Website Visits
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {analyticsData?.dailyVisits?.map((day, index) => {
-                const maxVisits = Math.max(...(analyticsData?.dailyVisits?.map(d => d.visits) || [1]))
-                const percentage = (day.visits / maxVisits) * 100
-                return (
-                  <div key={day.day} className="flex items-center justify-between">
-                    <span className="text-gray-300 text-sm w-12">{day.day}</span>
-                    <div className="flex-1 mx-4">
-                      <div className="bg-gray-700 rounded-full h-2">
-                        <div 
-                          className="bg-red-500 h-2 rounded-full transition-all duration-500" 
-                          style={{ width: `${percentage}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                    <span className="text-white text-sm w-12 text-right">{day.visits}</span>
-                  </div>
-                )
-              })}
-            </div>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-1 gap-8 mb-8">
+
 
         {/* Fleet Status */}
         <Card className="bg-gray-800 border-gray-700">
