@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Car } from "lucide-react"
 import { toast } from "sonner"
+import { supabase } from "@/lib/supabase"
 import logo from "@/assets/images/logo.png"
 
 const Login = () => {
@@ -16,13 +17,31 @@ const Login = () => {
     e.preventDefault()
     setIsLoading(true)
 
-    // Simple admin check (replace with proper authentication)
-    if (credentials.username === 'admin' && credentials.password === 'admin123') {
-      localStorage.setItem('isAdminLoggedIn', 'true')
-      toast.success('Login successful!')
-      navigate('/')
-    } else {
-      toast.error('Invalid credentials')
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('email', credentials.username)
+        .eq('role', 'admin')
+        .single()
+
+      if (error || !data) {
+        toast.error('Invalid credentials')
+        setIsLoading(false)
+        return
+      }
+
+      // Simple password check (in production, use proper hashing)
+      if (data.password === credentials.password) {
+        localStorage.setItem('isAdminLoggedIn', 'true')
+        localStorage.setItem('adminUser', JSON.stringify(data))
+        toast.success('Login successful!')
+        navigate('/')
+      } else {
+        toast.error('Invalid credentials')
+      }
+    } catch (error) {
+      toast.error('Login failed')
     }
     
     setIsLoading(false)
@@ -71,7 +90,7 @@ const Login = () => {
             </Button>
           </form>
           <div className="mt-4 text-center text-sm text-gray-400">
-            Demo: admin / admin123
+            Use your admin email and password
           </div>
         </CardContent>
       </Card>
