@@ -3,8 +3,7 @@ import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Users, Award, Clock, Globe, Shield, Star, MapPin, Headphones } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { trackPageView } from "@/lib/analytics";
-import { useEffect } from "react";
+
 
 const About = () => {
   const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation();
@@ -13,9 +12,7 @@ const About = () => {
   const { ref: teamRef, isVisible: teamVisible } = useScrollAnimation();
   const { ref: whyRef, isVisible: whyVisible } = useScrollAnimation();
   
-  useEffect(() => {
-    trackPageView('about');
-  }, []);
+
 
   const values = [
     {

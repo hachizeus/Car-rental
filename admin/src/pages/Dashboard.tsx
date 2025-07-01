@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
 import { Car, TrendingUp, Users, Eye, Calendar } from "lucide-react"
 
-const Dashboard = ({ stats }: { stats?: any }) => {
+const Dashboard = () => {
   const { data: cars } = useQuery({
     queryKey: ['cars'],
     queryFn: async () => {
@@ -20,41 +20,20 @@ const Dashboard = ({ stats }: { stats?: any }) => {
   const availableCars = cars?.filter(car => car.is_available).length || 0
   const rentedCars = totalCars - availableCars
   
-  // Analytics data from database
-  const { data: analyticsData } = useQuery({
-    queryKey: ['analytics'],
-    queryFn: async () => {
-      const { data: visits } = await supabase
-        .from('page_views')
-        .select('*')
-        .gte('timestamp', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
-        .order('timestamp', { ascending: true })
-      
-      // Group visits by day
-      const dailyVisits = []
-      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-      
-      for (let i = 6; i >= 0; i--) {
-        const date = new Date()
-        date.setDate(date.getDate() - i)
-        const dayName = days[date.getDay()]
-        const dayVisits = visits?.filter(visit => 
-          new Date(visit.timestamp).toDateString() === date.toDateString()
-        ).length || 0
-        
-        dailyVisits.push({ day: dayName, visits: dayVisits })
-      }
-      
-      const totalVisits = visits?.length || 0
-      const totalUsers = new Set(visits?.map(v => v.user_agent)).size || 0
-      
-      return {
-        dailyVisits,
-        totalVisits,
-        totalUsers
-      }
-    }
-  })
+  // Mock analytics data
+  const analyticsData = {
+    dailyVisits: [
+      { day: 'Sun', visits: 0 },
+      { day: 'Mon', visits: 0 },
+      { day: 'Tue', visits: 0 },
+      { day: 'Wed', visits: 0 },
+      { day: 'Thu', visits: 0 },
+      { day: 'Fri', visits: 0 },
+      { day: 'Sat', visits: 0 }
+    ],
+    totalVisits: 0,
+    totalUsers: 0
+  }
 
 
   return (
@@ -93,7 +72,7 @@ const Dashboard = ({ stats }: { stats?: any }) => {
             <Eye className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">{stats?.totalViews || 0}</div>
+            <div className="text-2xl font-bold text-white">0</div>
             <p className="text-xs text-gray-400 mt-1">This week</p>
           </CardContent>
         </Card>
@@ -104,7 +83,7 @@ const Dashboard = ({ stats }: { stats?: any }) => {
             <Users className="h-4 w-4 text-purple-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">{stats?.carViews || 0}</div>
+            <div className="text-2xl font-bold text-white">0</div>
             <p className="text-xs text-gray-400 mt-1">Car detail views</p>
           </CardContent>
         </Card>

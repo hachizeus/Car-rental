@@ -3,13 +3,10 @@ import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Clock, Shield, Users, Wrench, MapPin, Phone } from "lucide-react";
-import { trackPageView } from "@/lib/analytics";
-import { useEffect } from "react";
+
 
 const Services = () => {
-  useEffect(() => {
-    trackPageView('services');
-  }, []);
+
   
   const services = [
     {

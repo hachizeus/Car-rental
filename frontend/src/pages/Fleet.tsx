@@ -9,8 +9,7 @@ import { Users, Fuel, Settings, Star, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { trackPageView } from "@/lib/analytics";
-import { useEffect } from "react";
+
 
 const Fleet = () => {
   const navigate = useNavigate();
@@ -18,9 +17,7 @@ const Fleet = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [priceRange, setPriceRange] = useState({ min: 0, max: 50000 });
   
-  useEffect(() => {
-    trackPageView('fleet');
-  }, []);
+
 
   const { data: cars = [], isLoading } = useQuery({
     queryKey: ['cars'],

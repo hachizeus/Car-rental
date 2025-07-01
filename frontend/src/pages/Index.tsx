@@ -9,9 +9,7 @@ import { useAnalytics } from "@/hooks/useAnalytics";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useLoading } from "@/contexts/LoadingContext";
-import { trackPageView } from "@/lib/analytics";
-import { useEffect } from "react";
-import "@/lib/debug";
+
 
 const Index = () => {
   const { isInitialLoading } = useLoading();
@@ -20,10 +18,7 @@ const Index = () => {
   
   useAnalytics();
   
-  useEffect(() => {
-    console.log('Homepage loaded, tracking view...');
-    trackPageView('home');
-  }, []);
+
   
   if (isInitialLoading) {
     return <LoadingSpinner />;

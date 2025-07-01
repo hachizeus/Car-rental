@@ -43,9 +43,7 @@ const CarList = () => {
         }
       }
       
-      // Delete car views
-      await supabase.from('car_views').delete().eq('car_id', id)
-      
+
       // Delete car (cascade will delete related records)
       const { error } = await supabase.from('cars').delete().eq('id', id)
       if (error) throw error

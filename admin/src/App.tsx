@@ -8,10 +8,7 @@ import CarList from "./pages/CarList"
 import AddCar from "./pages/AddCar"
 import EditCar from "./pages/EditCar"
 import Login from "./pages/Login"
-import { useQuery } from "@tanstack/react-query"
-import { supabase } from "@/lib/supabase"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Eye, CarFront } from "lucide-react"
+
 
 const queryClient = new QueryClient()
 
@@ -96,44 +93,7 @@ const TopBar = () => {
   )
 }
 
-const DashboardWithAnalytics = () => {
-  const { data: stats } = useQuery({
-    queryKey: ['dashboard-analytics'],
-    queryFn: async () => {
-      const { count: totalViews } = await supabase
-        .from('page_views')
-        .select('*', { count: 'exact', head: true })
 
-      const { count: carViews } = await supabase
-        .from('car_views')
-        .select('*', { count: 'exact', head: true })
-
-      const { data: topCars } = await supabase
-        .from('car_views')
-        .select('car_title')
-        .order('timestamp', { ascending: false })
-        .limit(50)
-
-      const carViewCounts = topCars?.reduce((acc, view) => {
-        acc[view.car_title] = (acc[view.car_title] || 0) + 1
-        return acc
-      }, {} as Record<string, number>) || {}
-
-      const mostViewedCars = Object.entries(carViewCounts)
-        .sort(([,a], [,b]) => b - a)
-        .slice(0, 3)
-        .map(([title, views]) => ({ title, views }))
-
-      return {
-        totalViews: totalViews || 0,
-        carViews: carViews || 0,
-        mostViewedCars
-      }
-    }
-  })
-
-  return <Dashboard stats={stats} />
-}
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const isLoggedIn = localStorage.getItem('isAdminLoggedIn')
@@ -150,7 +110,7 @@ const App = () => (
         <main className="ml-64 pt-4 p-6">
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route path="/" element={<ProtectedRoute><DashboardWithAnalytics /></ProtectedRoute>} />
+            <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/cars" element={<ProtectedRoute><CarList /></ProtectedRoute>} />
             <Route path="/cars/add" element={<ProtectedRoute><AddCar /></ProtectedRoute>} />
             <Route path="/cars/edit/:id" element={<ProtectedRoute><EditCar /></ProtectedRoute>} />
