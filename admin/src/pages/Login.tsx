@@ -62,12 +62,13 @@ const Login = () => {
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-2 text-gray-300">Username</label>
+              <label className="block text-sm font-medium mb-2 text-gray-300">Email</label>
               <Input
-                type="text"
+                type="email"
                 value={credentials.username}
                 onChange={(e) => setCredentials({...credentials, username: e.target.value})}
                 className="bg-gray-700 border-gray-600 text-white"
+                placeholder="pattrentalservices@gmail.com"
                 required
               />
             </div>
