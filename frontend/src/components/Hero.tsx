@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { ArrowRight, Play, Star, MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import videoSrc from "@/assets/images/vida.mp4";
 
 export const Hero = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ export const Hero = () => {
   return (
     <section className="relative bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:bg-[#141414] py-2 overflow-hidden texture-light dark:texture-none">
       <div className="max-w-none mx-2 relative">
-        <Card className="bg-white dark:bg-[#1a1a1a] shadow-strong border border-gray-200 dark:border-gray-600 rounded-3xl overflow-hidden relative">
+        <Card className="bg-transparent shadow-strong border border-gray-200 dark:border-gray-600 rounded-3xl overflow-hidden relative">
           {/* Video Background with Fallback */}
           <div className="absolute inset-0 w-full h-full">
             <video 
@@ -29,11 +30,10 @@ export const Hero = () => {
                 e.currentTarget.style.display = 'none';
               }}
             >
-              <source src="/vida.mp4" type="video/mp4" />
-              <source src="./vida.mp4" type="video/mp4" />
+              <source src={videoSrc} type="video/mp4" />
             </video>
             {/* Fallback gradient background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black z-0"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black -z-10"></div>
           </div>
           {/* Dark overlay for text readability */}
           <div className="absolute inset-0 bg-black/30 z-1"></div>
