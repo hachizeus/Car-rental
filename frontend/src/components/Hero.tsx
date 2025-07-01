@@ -14,21 +14,29 @@ export const Hero = () => {
     <section className="relative bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:bg-[#141414] py-2 overflow-hidden texture-light dark:texture-none">
       <div className="max-w-none mx-2 relative">
         <Card className="bg-white dark:bg-[#1a1a1a] shadow-strong border border-gray-200 dark:border-gray-600 rounded-3xl overflow-hidden relative">
-          {/* Video Background */}
-          <video 
-            autoPlay 
-            muted 
-            loop 
-            playsInline
-            preload="metadata"
-            className="absolute inset-0 w-full h-full object-cover z-0"
-            style={{ filter: 'brightness(0.7)' }}
-          >
-            <source src="/vida.mp4" type="video/mp4" />
-            <source src="/src/assets/images/vida.mp4" type="video/mp4" />
-          </video>
+          {/* Video Background with Fallback */}
+          <div className="absolute inset-0 w-full h-full">
+            <video 
+              autoPlay 
+              muted 
+              loop 
+              playsInline
+              preload="none"
+              className="absolute inset-0 w-full h-full object-cover z-0"
+              style={{ filter: 'brightness(0.7)' }}
+              onError={(e) => {
+                console.log('Video failed to load, hiding video element');
+                e.currentTarget.style.display = 'none';
+              }}
+            >
+              <source src="/vida.mp4" type="video/mp4" />
+              <source src="./vida.mp4" type="video/mp4" />
+            </video>
+            {/* Fallback gradient background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black z-0"></div>
+          </div>
           {/* Dark overlay for text readability */}
-          <div className="absolute inset-0 bg-black/40"></div>
+          <div className="absolute inset-0 bg-black/30 z-1"></div>
           
           
           
