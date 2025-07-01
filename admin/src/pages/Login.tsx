@@ -36,7 +36,7 @@ const Login = () => {
         localStorage.setItem('isAdminLoggedIn', 'true')
         localStorage.setItem('adminUser', JSON.stringify(data))
         toast.success('Login successful!')
-        navigate('/')
+        window.location.href = '/'
       } else {
         toast.error('Invalid credentials')
       }

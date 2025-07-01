@@ -84,7 +84,7 @@ const TopBar = () => {
           onClick={() => {
             localStorage.clear();
             sessionStorage.clear();
-            window.location.href = '/login';
+            window.location.reload();
           }}
           className="flex items-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors duration-200"
         >
