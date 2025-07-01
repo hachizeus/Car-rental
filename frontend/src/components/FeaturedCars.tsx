@@ -73,6 +73,7 @@ export const FeaturedCars = () => {
                     <img 
                       src={primaryImage} 
                       alt={car.title}
+                      loading="lazy"
                       className="w-full h-48 sm:h-56 object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                   ) : (

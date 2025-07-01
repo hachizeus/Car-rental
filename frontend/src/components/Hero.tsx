@@ -19,8 +19,12 @@ export const Hero = () => {
             autoPlay 
             muted 
             loop 
-            className="absolute inset-0 w-full h-full object-cover"
+            playsInline
+            preload="metadata"
+            className="absolute inset-0 w-full h-full object-cover z-0"
+            style={{ filter: 'brightness(0.7)' }}
           >
+            <source src="/vida.mp4" type="video/mp4" />
             <source src="/src/assets/images/vida.mp4" type="video/mp4" />
           </video>
           {/* Dark overlay for text readability */}

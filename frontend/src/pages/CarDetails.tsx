@@ -89,6 +89,7 @@ const CarDetails = () => {
                   <img 
                     src={primaryImage} 
                     alt={car.title}
+                    loading="lazy"
                     className="w-full h-96 object-cover rounded-2xl"
                   />
                 ) : (
