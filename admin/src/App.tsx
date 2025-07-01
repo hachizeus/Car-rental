@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard"
 import CarList from "./pages/CarList"
 import AddCar from "./pages/AddCar"
 import EditCar from "./pages/EditCar"
+import Login from "./pages/Login"
 import { useQuery } from "@tanstack/react-query"
 import { supabase } from "@/lib/supabase"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -79,7 +80,14 @@ const TopBar = () => {
           <span className="text-sm font-medium">Admin User</span>
         </div>
         
-        <button className="flex items-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors duration-200">
+        <button 
+          onClick={() => {
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.href = '/login';
+          }}
+          className="flex items-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors duration-200"
+        >
           <LogOut className="w-4 h-4" />
           <span className="font-medium">Logout</span>
         </button>
@@ -127,6 +135,11 @@ const DashboardWithAnalytics = () => {
   return <Dashboard stats={stats} />
 }
 
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const isLoggedIn = localStorage.getItem('isAdminLoggedIn')
+  return isLoggedIn ? <>{children}</> : <Login />
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <BrowserRouter>
@@ -136,10 +149,11 @@ const App = () => (
         
         <main className="ml-64 pt-4 p-6">
           <Routes>
-            <Route path="/" element={<DashboardWithAnalytics />} />
-            <Route path="/cars" element={<CarList />} />
-            <Route path="/cars/add" element={<AddCar />} />
-            <Route path="/cars/edit/:id" element={<EditCar />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<ProtectedRoute><DashboardWithAnalytics /></ProtectedRoute>} />
+            <Route path="/cars" element={<ProtectedRoute><CarList /></ProtectedRoute>} />
+            <Route path="/cars/add" element={<ProtectedRoute><AddCar /></ProtectedRoute>} />
+            <Route path="/cars/edit/:id" element={<ProtectedRoute><EditCar /></ProtectedRoute>} />
           </Routes>
         </main>
       </div>

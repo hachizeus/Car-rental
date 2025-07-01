@@ -1,12 +1,8 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import path from "path";
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import path from 'path'
 
 export default defineConfig({
-  server: {
-    host: "::",
-    port: 8081,
-  },
   plugins: [react()],
   resolve: {
     alias: {
@@ -14,10 +10,24 @@ export default defineConfig({
     },
   },
   build: {
+    outDir: 'dist',
+    sourcemap: false,
     rollupOptions: {
-      input: {
-        main: path.resolve(__dirname, 'index.html')
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          query: ['@tanstack/react-query']
+        }
       }
     }
+  },
+  server: {
+    port: 3000,
+    host: true
+  },
+  preview: {
+    port: 3000,
+    host: true
   }
-});
+})
