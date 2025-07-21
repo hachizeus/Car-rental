@@ -1,6 +1,6 @@
-import { FeaturedCars } from "@/components/FeaturedCars";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
+import { PremiumFleet } from "@/components/PremiumFleet";
 import { AboutSection } from "@/components/AboutSection";
 import { Stats } from "@/components/Stats";
 import { Footer } from "@/components/Footer";
@@ -83,12 +83,10 @@ const Index = () => {
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:bg-[#141414]">
         <Header />
         <Hero />
+        <PremiumFleet />
         <AboutSection />
         <div className={`bg-gray-50 dark:bg-[#141414] texture-subtle transition-all duration-700 ${statsVisible ? 'opacity-100 translate-y-0' : 'opacity-100 translate-y-0'}`} ref={statsRef}>
           <Stats />
-        </div>
-        <div className="bg-white dark:bg-[#141414]">
-          <FeaturedCars />
         </div>
         <Footer />
       </div>

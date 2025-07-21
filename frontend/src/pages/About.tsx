@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Users, Award, Clock, Globe, Shield, Star, MapPin, Headphones } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import victorImage from "@/assets/images/victor.jpg";
+import patImage from "@/assets/images/pat.jpg";
 
 
 const About = () => {
@@ -63,13 +64,13 @@ const About = () => {
 
   const team = [
     {
-      name: "John Kamau",
+      name: "PATRICK MUCHEMI WANJOHI",
       position: "CEO & Founder",
-      image: "/placeholder.svg",
+      image: patImage,
       description: "15+ years in automotive industry"
     },
     {
-      name: "Victor Gathecha",
+      name: "VICTOR GATHECHA",
       position: "Full Stack Software Developer",
       image: victorImage,
       description: "MIT graduate specializing in modern web technologies"

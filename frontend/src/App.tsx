@@ -7,6 +7,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { HelmetProvider } from "react-helmet-async";
 import { LoadingProvider } from "@/contexts/LoadingContext";
+import { A11yProvider } from "@/components/A11yProvider";
+import { SkipLink } from "@/components/SkipLink";
+import "@/styles/a11y.css";
 import Index from "./pages/Index";
 import Fleet from "./pages/Fleet";
 import Services from "./pages/Services";
@@ -20,12 +23,14 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <HelmetProvider>
-      <LoadingProvider>
-        <ThemeProvider defaultTheme="light" storageKey="morent-ui-theme">
-          <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
+      <A11yProvider>
+        <LoadingProvider>
+          <ThemeProvider defaultTheme="light" storageKey="morent-ui-theme">
+            <TooltipProvider>
+            <SkipLink />
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/fleet" element={<Fleet />} />
@@ -37,9 +42,10 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
           </BrowserRouter>
-          </TooltipProvider>
-        </ThemeProvider>
-      </LoadingProvider>
+            </TooltipProvider>
+          </ThemeProvider>
+        </LoadingProvider>
+      </A11yProvider>
     </HelmetProvider>
   </QueryClientProvider>
 );
