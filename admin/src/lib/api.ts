@@ -45,6 +45,12 @@ export const api = {
     return response.json();
   },
 
+  getCar: async (id: string): Promise<Car> => {
+    const response = await fetch(`${API_BASE_URL}/cars/${id}`);
+    if (!response.ok) throw new Error('Failed to fetch car');
+    return response.json();
+  },
+
   addCar: async (formData: FormData): Promise<Car> => {
     const response = await fetch(`${API_BASE_URL}/cars`, {
       method: 'POST',

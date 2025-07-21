@@ -42,13 +42,13 @@ const EditCar = () => {
   useEffect(() => {
     if (car) {
       setFormData({
-        title: car.title,
-        description: car.description,
-        price_per_day: car.price_per_day.toString(),
-        category: car.category,
-        location: car.location,
+        title: car.title || '',
+        description: car.description || '',
+        price_per_day: car.price_per_day?.toString() || '',
+        category: car.category || 'economy',
+        location: car.location || 'Nairobi',
         features: car.features?.join(', ') || '',
-        is_available: car.is_available,
+        is_available: car.is_available ?? true,
         engine: car.engine || '',
         transmission: car.transmission || 'automatic',
         fuel_type: car.fuel_type || 'petrol',
