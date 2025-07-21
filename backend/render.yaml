@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: car-rental-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        value: mongodb+srv://anziaelectronics:0a0b0c0d@anziaelectronics.vfsc5md.mongodb.net/?retryWrites=true&w=majority&appName=anziaelectronics
+      - key: IMAGEKIT_PUBLIC_KEY
+        value: public_ahoxvdF2fShMnKvheyP8TQrAKhE=
+      - key: IMAGEKIT_PRIVATE_KEY
+        value: private_2giGXPBneW+SEkkpeZIG7djjhqw=
+      - key: IMAGEKIT_URL_ENDPOINT
+        value: https://ik.imagekit.io/q5jukn457
+      - key: JWT_SECRET
+        value: cd57c4c40415b68b920360bc1537f5d026ea58496733d8f37a948b12794e82c30e5b2a809f87a6c6ccc50f830aacedbe2b8922306ba90b322b17f41b3e03fc6c
+      - key: PORT
+        value: 10000
