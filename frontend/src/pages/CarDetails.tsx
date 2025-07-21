@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 
@@ -8,8 +8,7 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { VideoFallback } from "@/components/VideoFallback";
-import { useState, useEffect } from "react";
+import { AutoplayVideo } from "@/components/AutoplayVideo";
 
 import { ArrowLeft, Star, MapPin, Users, Fuel, Settings, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -149,7 +148,7 @@ const CarDetails = () => {
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Videos</h3>
                 {car.videos.filter(v => v && typeof v === 'string').map((video, index) => (
                   <div key={`${video}-${index}-${videoRefreshKey}`} className="relative">
-                    <VideoFallback videoUrl={video} className="h-80" />
+                    <AutoplayVideo videoUrl={video} className="h-80" />
                   </div>
                 ))}
               </div>

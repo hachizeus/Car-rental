@@ -3,9 +3,13 @@ const multer = require('multer');
 const ImageKit = require('imagekit');
 const Car = require('../models/Car');
 const auth = require('../middleware/auth');
+const { uploadVideo } = require('../utils/videoUpload');
 
 const router = express.Router();
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({ 
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 100 * 1024 * 1024 } // 100MB limit
+});
 
 const imagekit = new ImageKit({
   publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
@@ -71,15 +75,11 @@ router.post('/', auth, upload.fields([
     if (req.files && req.files.videos) {
       for (const file of req.files.videos) {
         try {
-          const result = await imagekit.upload({
-            file: file.buffer,
-            fileName: `car-video-${Date.now()}`,
-            folder: '/cars/videos',
-            useUniqueFileName: true
-          });
-          car.videos.push(result.url);
+          const videoUrl = await uploadVideo(imagekit, file);
+          car.videos.push(videoUrl);
         } catch (error) {
           console.error(`Error uploading video: ${file.originalname}`, error);
+          // Continue with other videos even if one fails
         }
       }
     }
@@ -131,15 +131,12 @@ router.put('/:id', auth, upload.fields([
     if (req.files && req.files.videos) {
       for (const file of req.files.videos) {
         try {
-          const result = await imagekit.upload({
-            file: file.buffer,
-            fileName: `car-video-${Date.now()}`,
-            folder: '/cars/videos',
-            useUniqueFileName: true
-          });
-          car.videos.push(result.url);
+          console.log(`Updating car: ${car._id}, processing video upload`);
+          const videoUrl = await uploadVideo(imagekit, file);
+          car.videos.push(videoUrl);
         } catch (error) {
           console.error(`Error uploading video: ${file.originalname}`, error);
+          // Continue with other videos even if one fails
         }
       }
     }
@@ -199,7 +196,5 @@ router.delete('/:id/video/:videoIndex', auth, async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-module.exports = router;
 
 module.exports = router;
