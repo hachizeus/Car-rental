@@ -1,6 +1,4 @@
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://your-backend-url.onrender.com/api'
-  : 'http://localhost:5000/api';
+const API_BASE_URL = 'https://car-rental-backend-n66g.onrender.com/api';
 
 export interface Car {
   _id: string;
