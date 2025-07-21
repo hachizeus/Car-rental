@@ -112,16 +112,16 @@ const CarDetails = () => {
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Videos</h3>
                 {car.videos.map((video, index) => (
                   <div key={index} className="relative">
-                    <iframe
-                      src={video}
-                      className="w-full h-80 rounded-xl shadow-lg"
-                      frameBorder="0"
-                      allow="autoplay; fullscreen"
-                      allowFullScreen
-                      onError={() => {
-                        console.log('Video iframe error');
-                      }}
-                    />
+                    <video 
+                      controls
+                      controlsList="nodownload"
+                      className="w-full h-80 rounded-xl shadow-lg bg-black"
+                      style={{ objectFit: 'contain' }}
+                      preload="metadata"
+                    >
+                      <source src={`${video}?tr=f-mp4`} type="video/mp4" />
+                      <p className="text-center text-gray-500 p-8">Video format not supported</p>
+                    </video>
                   </div>
                 ))}
               </div>
