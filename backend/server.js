@@ -10,7 +10,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3001', 'https://car-rental-admin-r2oz.onrender.com'],
+  origin: ['http://localhost:5173', 'http://localhost:3001', 'https://car-rental-admin-r2oz.onrender.com', 'https://car-rental-frontend-7jwd.onrender.com'],
   credentials: true
 }));
 app.use(express.json({ limit: '50mb' }));
