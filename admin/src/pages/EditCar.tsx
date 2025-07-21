@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate, useParams } from "react-router-dom"
-import { supabase } from "@/lib/supabase"
+import { api } from "@/lib/api"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -35,18 +35,7 @@ const EditCar = () => {
 
   const { data: car, isLoading } = useQuery({
     queryKey: ['car', id],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('cars')
-        .select(`
-          *,
-          car_images(id, image_url, is_primary),
-          car_videos(id, video_url)
-        `)
-        .eq('id', id)
-        .single()
-      return data
-    },
+    queryFn: () => api.getCar(id!),
     enabled: !!id
   })
 
@@ -74,67 +63,26 @@ const EditCar = () => {
     mutationFn: async (data: typeof formData) => {
       setUploading(true)
       
-      // Update car details
-      const { error } = await supabase.from('cars').update({
-        title: data.title,
-        description: data.description,
-        price_per_day: parseFloat(data.price_per_day),
-        category: data.category,
-        location: data.location,
-        features: data.features.split(',').map(f => f.trim()).filter(Boolean),
-        is_available: data.is_available,
-        engine: data.engine,
-        transmission: data.transmission,
-        fuel_type: data.fuel_type,
-        seats: data.seats,
-        year: data.year,
-        mileage: data.mileage
-      }).eq('id', id)
-      if (error) throw error
+      const formDataToSend = new FormData()
       
-      // Upload new images
-      for (let i = 0; i < newImages.length; i++) {
-        const file = newImages[i]
-        const fileName = `${id}/${Date.now()}-${file.name}`
-        
-        const { error: uploadError } = await supabase.storage
-          .from('car-images')
-          .upload(fileName, file)
-        
-        if (uploadError) throw uploadError
-        
-        const { data: { publicUrl } } = supabase.storage
-          .from('car-images')
-          .getPublicUrl(fileName)
-        
-        await supabase.from('car_images').insert({
-          car_id: id,
-          image_url: publicUrl,
-          is_primary: false
-        })
-      }
+      // Add car data
+      Object.keys(data).forEach(key => {
+        formDataToSend.append(key, data[key as keyof typeof data] as string)
+      })
       
-      // Upload new videos
-      for (const file of newVideos) {
-        const fileName = `${id}/${Date.now()}-${file.name}`
-        
-        const { error: uploadError } = await supabase.storage
-          .from('car-videos')
-          .upload(fileName, file)
-        
-        if (uploadError) throw uploadError
-        
-        const { data: { publicUrl } } = supabase.storage
-          .from('car-videos')
-          .getPublicUrl(fileName)
-        
-        await supabase.from('car_videos').insert({
-          car_id: id,
-          video_url: publicUrl
-        })
-      }
+      // Add new images
+      newImages.forEach(file => {
+        formDataToSend.append('images', file)
+      })
       
+      // Add new videos
+      newVideos.forEach(file => {
+        formDataToSend.append('videos', file)
+      })
+      
+      const result = await api.updateCar(id!, formDataToSend)
       setUploading(false)
+      return result
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cars'] })
@@ -142,9 +90,9 @@ const EditCar = () => {
       toast.success('Car updated successfully')
       navigate('/cars')
     },
-    onError: () => {
+    onError: (error: any) => {
       setUploading(false)
-      toast.error('Failed to update car')
+      toast.error(error.message || 'Failed to update car')
     }
   })
 
@@ -173,25 +121,7 @@ const EditCar = () => {
     setNewVideos(newVideos.filter((_, i) => i !== index))
   }
   
-  const deleteExistingImage = async (imageId: string) => {
-    const { error } = await supabase.from('car_images').delete().eq('id', imageId)
-    if (error) {
-      toast.error('Failed to delete image')
-    } else {
-      toast.success('Image deleted')
-      queryClient.invalidateQueries({ queryKey: ['car', id] })
-    }
-  }
-  
-  const deleteExistingVideo = async (videoId: string) => {
-    const { error } = await supabase.from('car_videos').delete().eq('id', videoId)
-    if (error) {
-      toast.error('Failed to delete video')
-    } else {
-      toast.success('Video deleted')
-      queryClient.invalidateQueries({ queryKey: ['car', id] })
-    }
-  }
+  // Note: Image/video deletion would need separate API endpoints
 
   if (isLoading) return <div className="p-8 text-gray-900 dark:text-gray-100">Loading...</div>
 
@@ -340,14 +270,14 @@ const EditCar = () => {
             </div>
 
             {/* Existing Images */}
-            {car?.car_images && car.car_images.length > 0 && (
+            {car?.images && car.images.length > 0 && (
               <div>
                 <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Current Images</label>
                 <div className="grid grid-cols-2 gap-2">
-                  {car.car_images.map((img) => (
-                    <div key={img.id} className="relative">
+                  {car.images.map((img, index) => (
+                    <div key={index} className="relative">
                       <img 
-                        src={img.image_url} 
+                        src={img.url} 
                         alt="Car" 
                         className="w-full h-24 object-cover rounded"
                       />
@@ -356,15 +286,6 @@ const EditCar = () => {
                           Primary
                         </span>
                       )}
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="destructive"
-                        className="absolute top-1 right-1 h-6 w-6 p-0"
-                        onClick={() => deleteExistingImage(img.id)}
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
                     </div>
                   ))}
                 </div>
@@ -404,22 +325,13 @@ const EditCar = () => {
             </div>
 
             {/* Existing Videos */}
-            {car?.car_videos && car.car_videos.length > 0 && (
+            {car?.videos && car.videos.length > 0 && (
               <div>
                 <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Current Videos</label>
                 <div className="space-y-2">
-                  {car.car_videos.map((video) => (
-                    <div key={video.id} className="relative bg-gray-100 dark:bg-gray-700 p-2 rounded flex justify-between items-center">
-                      <span className="text-sm text-gray-900 dark:text-gray-100">Video {video.id}</span>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="destructive"
-                        className="h-6 w-6 p-0"
-                        onClick={() => deleteExistingVideo(video.id)}
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
+                  {car.videos.map((video, index) => (
+                    <div key={index} className="relative bg-gray-100 dark:bg-gray-700 p-2 rounded flex justify-between items-center">
+                      <span className="text-sm text-gray-900 dark:text-gray-100">Video {index + 1}</span>
                     </div>
                   ))}
                 </div>

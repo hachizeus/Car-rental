@@ -5,7 +5,7 @@ import { AboutSection } from "@/components/AboutSection";
 import { Stats } from "@/components/Stats";
 import { Footer } from "@/components/Footer";
 import { Helmet } from "react-helmet-async";
-import { useAnalytics } from "@/hooks/useAnalytics";
+
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useLoading } from "@/contexts/LoadingContext";
@@ -16,7 +16,7 @@ const Index = () => {
   const { ref: statsRef, isVisible: statsVisible } = useScrollAnimation();
   const { ref: carsRef, isVisible: carsVisible } = useScrollAnimation();
   
-  useAnalytics();
+
   
 
   
