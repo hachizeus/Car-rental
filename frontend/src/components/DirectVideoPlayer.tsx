@@ -1,20 +1,25 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
-interface AutoplayVideoProps {
+interface DirectVideoPlayerProps {
   videoUrl: string;
   className?: string;
 }
 
-export const AutoplayVideo = ({ videoUrl, className = '' }: AutoplayVideoProps) => {
+export const DirectVideoPlayer = ({ videoUrl, className = '' }: DirectVideoPlayerProps) => {
   const [error, setError] = useState(false);
-  const [videoSrc, setVideoSrc] = useState(videoUrl);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  
+  // Generate different format URLs to try
+  const mp4Url = videoUrl.includes('?') ? `${videoUrl}&tr=f-mp4` : `${videoUrl}?tr=f-mp4`;
+  const originalUrl = videoUrl;
   
   useEffect(() => {
-    // Add query parameters to bypass cache and CORS issues
-    if (videoUrl.includes('imagekit.io')) {
-      setVideoSrc(`${videoUrl}?tr=f-auto`);
-    } else {
-      setVideoSrc(videoUrl);
+    // Reset error state when URL changes
+    setError(false);
+    
+    // Try to load the video
+    if (videoRef.current) {
+      videoRef.current.load();
     }
   }, [videoUrl]);
   
@@ -27,7 +32,7 @@ export const AutoplayVideo = ({ videoUrl, className = '' }: AutoplayVideoProps) 
     return (
       <div className={`flex items-center justify-center bg-black rounded-xl ${className}`}>
         <div className="text-white text-center p-4">
-          <p className="mb-2">Unable to play this video format</p>
+          <p className="mb-2">Unable to play this video</p>
           <a 
             href={videoUrl} 
             target="_blank" 
@@ -44,6 +49,7 @@ export const AutoplayVideo = ({ videoUrl, className = '' }: AutoplayVideoProps) 
   return (
     <div className={`relative ${className}`}>
       <video
+        ref={videoRef}
         className="w-full h-full rounded-xl object-contain bg-black"
         autoPlay
         muted
@@ -53,10 +59,11 @@ export const AutoplayVideo = ({ videoUrl, className = '' }: AutoplayVideoProps) 
         crossOrigin="anonymous"
         onError={handleError}
       >
-        <source src={videoSrc} type="video/mp4" />
-        <source src={`${videoSrc}?tr=f-mp4`} type="video/mp4" />
-        <source src={videoUrl} type="video/webm" />
-        <p>Your browser doesn't support this video format</p>
+        {/* Try multiple sources in different formats */}
+        <source src={mp4Url} type="video/mp4" />
+        <source src={originalUrl} type="video/mp4" />
+        <source src={originalUrl} type="video/webm" />
+        <p>Your browser doesn't support HTML5 video</p>
       </video>
     </div>
   );
