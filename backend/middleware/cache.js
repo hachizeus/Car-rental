@@ -11,6 +11,12 @@ const cacheMiddleware = (ttl = 300) => {
     if (req.method !== 'GET') {
       return next();
     }
+    
+    // Skip caching for specific routes
+    if (req.path.includes('/cars/') && req.path.match(/\/cars\/[a-zA-Z0-9]+$/)) {
+      // Skip caching for individual car details
+      return next();
+    }
 
     const key = req.originalUrl;
     const cachedResponse = cache.get(key);

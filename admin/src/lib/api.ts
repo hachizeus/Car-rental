@@ -104,11 +104,14 @@ export const api = {
         throw new Error('Invalid car ID or video index');
       }
       
-      const response = await fetch(`${API_BASE_URL}/cars/${carId}/video/${videoIndex}`, {
+      // Add timestamp to prevent caching
+      const timestamp = Date.now();
+      const response = await fetch(`${API_BASE_URL}/cars/${carId}/video/${videoIndex}?t=${timestamp}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${getAuthToken()}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache, no-store'
         }
       });
       
@@ -116,6 +119,9 @@ export const api = {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.error || 'Failed to delete video');
       }
+      
+      // Return the response data
+      return await response.json();
     }, 'Failed to delete video');
   }
 };

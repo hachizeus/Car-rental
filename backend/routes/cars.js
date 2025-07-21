@@ -197,7 +197,9 @@ router.delete('/:id/video/:videoIndex', auth, async (req, res) => {
       return res.status(400).json({ error: 'Missing required parameters' });
     }
     
-    const car = await Car.findById(req.params.id);
+    // Find car by ID directly with MongoDB to ensure fresh data
+    const carId = req.params.id;
+    const car = await Car.findById(carId).lean();
     if (!car) return res.status(404).json({ error: 'Car not found' });
     
     // Ensure videoIndex is a valid number
@@ -206,21 +208,41 @@ router.delete('/:id/video/:videoIndex', auth, async (req, res) => {
       return res.status(400).json({ error: 'Video index must be a number' });
     }
     
-    // Check if videos array exists and has the specified index
-    if (!Array.isArray(car.videos)) {
-      car.videos = [];
-      await car.save();
+    // Check if videos array exists
+    if (!Array.isArray(car.videos) || car.videos.length === 0) {
       return res.status(400).json({ error: 'No videos found for this car' });
     }
     
-    if (videoIndex >= 0 && videoIndex < car.videos.length) {
-      // Remove the video at the specified index
-      car.videos.splice(videoIndex, 1);
-      await car.save();
-      res.json({ message: 'Video deleted successfully' });
-    } else {
-      res.status(400).json({ error: 'Invalid video index' });
+    // Check if index is valid
+    if (videoIndex < 0 || videoIndex >= car.videos.length) {
+      return res.status(400).json({ error: 'Invalid video index' });
     }
+    
+    // Get the video URL before removing it
+    const videoUrl = car.videos[videoIndex];
+    console.log(`Deleting video at index ${videoIndex}: ${videoUrl}`);
+    
+    // Use direct MongoDB update to remove the video at the specified index
+    // This is more reliable than using splice and save
+    const result = await Car.updateOne(
+      { _id: carId },
+      { $pull: { videos: videoUrl } }
+    );
+    
+    console.log('MongoDB update result:', result);
+    
+    if (result.modifiedCount === 0) {
+      return res.status(500).json({ error: 'Failed to delete video from database' });
+    }
+    
+    // Get the updated car to return in response
+    const updatedCar = await Car.findById(carId);
+    
+    res.json({ 
+      message: 'Video deleted successfully',
+      success: true,
+      updatedVideos: updatedCar.videos
+    });
   } catch (error) {
     console.error('Error deleting video:', error);
     res.status(500).json({ error: error.message || 'Failed to delete video' });

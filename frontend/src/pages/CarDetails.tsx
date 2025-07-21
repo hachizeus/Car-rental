@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { VideoFallback } from "@/components/VideoFallback";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { ArrowLeft, Star, MapPin, Users, Fuel, Settings, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -17,11 +17,21 @@ const CarDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [videoRefreshKey, setVideoRefreshKey] = useState(Date.now());
+  
+  // Force refresh videos when component mounts or id changes
+  useEffect(() => {
+    setVideoRefreshKey(Date.now());
+  }, [id]);
 
   const { data: car, isLoading } = useQuery({
     queryKey: ['car', id],
     queryFn: () => api.getCar(id!),
-    enabled: !!id
+    enabled: !!id,
+    staleTime: 0, // Consider data always stale
+    cacheTime: 0, // Don't cache the data
+    refetchOnMount: true, // Always refetch when component mounts
+    refetchOnWindowFocus: true // Refetch when window regains focus
   });
 
 
@@ -135,10 +145,10 @@ const CarDetails = () => {
             
             {/* Videos */}
             {car.videos && Array.isArray(car.videos) && car.videos.filter(v => v && typeof v === 'string').length > 0 && (
-              <div className="space-y-4">
+              <div className="space-y-4" key={videoRefreshKey}>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Videos</h3>
                 {car.videos.filter(v => v && typeof v === 'string').map((video, index) => (
-                  <div key={index} className="relative">
+                  <div key={`${video}-${index}-${videoRefreshKey}`} className="relative">
                     <VideoFallback videoUrl={video} className="h-80" />
                   </div>
                 ))}

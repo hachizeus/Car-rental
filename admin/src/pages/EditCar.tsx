@@ -36,7 +36,11 @@ const EditCar = () => {
   const { data: car, isLoading } = useQuery({
     queryKey: ['car', id],
     queryFn: () => api.getCar(id!),
-    enabled: !!id
+    enabled: !!id,
+    staleTime: 0, // Consider data always stale
+    cacheTime: 0, // Don't cache the data
+    refetchOnMount: true, // Always refetch when component mounts
+    refetchOnWindowFocus: true // Refetch when window regains focus
   })
 
   useEffect(() => {
@@ -366,10 +370,30 @@ const EditCar = () => {
                         variant="destructive"
                         className="h-6 w-6 p-0"
                         onClick={async () => {
+                          if (!confirm('Are you sure you want to permanently delete this video?')) {
+                            return;
+                          }
+                          
                           try {
-                            await api.deleteVideo(id!, index);
-                            toast.success('Video deleted successfully');
-                            queryClient.invalidateQueries({ queryKey: ['car', id] });
+                            // Disable the button during deletion
+                            const button = document.activeElement as HTMLButtonElement;
+                            if (button) button.disabled = true;
+                            
+                            // Delete the video
+                            const result = await api.deleteVideo(id!, index);
+                            
+                            // Clear all queries to force fresh data
+                            queryClient.clear();
+                            
+                            // Force refetch
+                            await queryClient.invalidateQueries();
+                            
+                            toast.success('Video permanently deleted');
+                            
+                            // Force page reload after a short delay
+                            setTimeout(() => {
+                              window.location.reload();
+                            }, 500);
                           } catch (error: any) {
                             toast.error(error.message || 'Failed to delete video');
                           }
