@@ -13,7 +13,7 @@ const cacheMiddleware = (ttl = 300) => {
     }
     
     // Skip caching for specific routes
-    if (req.path.includes('/cars/') && req.path.match(/\/cars\/[a-zA-Z0-9]+$/)) {
+    if (req.path.includes('/cars/')) {
       // Skip caching for individual car details
       return next();
     }

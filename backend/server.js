@@ -25,10 +25,18 @@ app.use(cors({
 }));
 
 // Add CORS preflight for all routes
-app.options('*', cors());
+app.options('*', cors({
+  origin: ['http://localhost:5173', 'http://localhost:3001', 'https://car-rental-admin-r2oz.onrender.com', 'https://car-rental-frontend-7jwd.onrender.com'],
+  credentials: true
+}));
 
 // Disable caching for API responses
 app.use((req, res, next) => {
+  // Don't set headers for non-existent response
+  if (res.headersSent) {
+    return next();
+  }
+  
   res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
   res.set('Pragma', 'no-cache');
   res.set('Expires', '0');
