@@ -36,13 +36,36 @@ const initPerformanceTracking = () => {
   if (typeof window === 'undefined' || !window.gtag) return;
   
   try {
-    // Track Core Web Vitals
-    if ('web-vitals' in window) {
-      import('web-vitals').then(({ getCLS, getFID, getLCP }) => {
-        getCLS((metric) => trackPerformance('CLS', metric.value));
-        getFID((metric) => trackPerformance('FID', metric.value));
-        getLCP((metric) => trackPerformance('LCP', metric.value));
+    // Track Core Web Vitals using native Performance API
+    if ('PerformanceObserver' in window) {
+      // Track Largest Contentful Paint
+      const lcpObserver = new PerformanceObserver((entryList) => {
+        const entries = entryList.getEntries();
+        const lastEntry = entries[entries.length - 1];
+        trackPerformance('LCP', lastEntry.startTime);
       });
+      lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
+      
+      // Track First Input Delay
+      const fidObserver = new PerformanceObserver((entryList) => {
+        const entries = entryList.getEntries();
+        entries.forEach(entry => {
+          trackPerformance('FID', entry.processingStart - entry.startTime);
+        });
+      });
+      fidObserver.observe({ type: 'first-input', buffered: true });
+      
+      // Track layout shifts
+      const clsObserver = new PerformanceObserver((entryList) => {
+        let clsValue = 0;
+        entryList.getEntries().forEach(entry => {
+          if (!entry.hadRecentInput) {
+            clsValue += entry.value;
+          }
+        });
+        trackPerformance('CLS', clsValue);
+      });
+      clsObserver.observe({ type: 'layout-shift', buffered: true });
     }
   } catch (error) {
     console.error('Performance tracking error:', error);
@@ -159,6 +182,5 @@ declare global {
   interface Window {
     dataLayer: any[];
     gtag: (...args: any[]) => void;
-    'web-vitals'?: any;
   }
 }

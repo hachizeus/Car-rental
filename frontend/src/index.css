@@ -262,3 +262,16 @@ All colors MUST be HSL.
     background-position: -200% 0;
   }
 }
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spinner 1s linear infinite;
+}

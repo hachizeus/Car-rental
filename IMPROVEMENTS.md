@@ -2,6 +2,13 @@
 
 This document outlines the improvements made to the Car Rental Website project.
 
+## Recent Fixes
+
+1. **Web-vitals Dependency Removal**
+   - Removed dependency on external web-vitals library
+   - Implemented native Performance API for monitoring Core Web Vitals
+   - Added custom spinner animation for image loading
+
 ## Performance Optimizations
 
 1. **Image Optimization**

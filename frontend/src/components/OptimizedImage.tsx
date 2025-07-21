@@ -98,12 +98,14 @@ export const OptimizedImage = ({
       }}
       aria-label={error ? `Image could not be loaded: ${alt}` : undefined}
     >
-      {/* Placeholder/Loading state */}
+      {/* Placeholder/Loading state with spinner */}
       {(!isLoaded || error) && blur && (
         <div 
-          className="absolute inset-0 bg-gray-200 dark:bg-gray-800 animate-pulse" 
+          className="absolute inset-0 bg-gray-200 dark:bg-gray-800 animate-pulse flex items-center justify-center" 
           aria-hidden="true"
-        />
+        >
+          <div className="w-8 h-8 border-2 border-brand-600 border-t-transparent rounded-full animate-spin" />
+        </div>
       )}
       
       {/* Actual image */}
