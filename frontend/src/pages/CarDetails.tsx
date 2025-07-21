@@ -69,49 +69,63 @@ const CarDetails = () => {
           {/* Car Images & Videos */}
           <div className="lg:col-span-2 space-y-4">
             <div className="relative main-image-container">
-              {(() => {
-                const primaryImage = car.images?.find(img => img.is_primary)?.url
-                return primaryImage ? (
+              {car.images && car.images.length > 0 ? (
+                <>
                   <img 
-                    src={primaryImage} 
+                    src={car.images[currentImageIndex]?.url} 
                     alt={car.title}
                     loading="lazy"
                     className="main-car-image w-full h-96 object-cover rounded-2xl"
                   />
-                ) : (
-                  <div className="w-full h-96 bg-gray-200 rounded-2xl flex items-center justify-center">
-                    <span className="text-gray-500">No Image Available</span>
-                  </div>
-                )
-              })()}
-              <Badge className="absolute top-4 left-4 bg-brand-600">
+                  
+                  {/* Navigation Buttons */}
+                  {car.images.length > 1 && (
+                    <>
+                      <button
+                        onClick={() => setCurrentImageIndex(prev => prev === 0 ? car.images.length - 1 : prev - 1)}
+                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors z-10"
+                      >
+                        <ChevronLeft className="w-5 h-5" />
+                      </button>
+                      <button
+                        onClick={() => setCurrentImageIndex(prev => prev === car.images.length - 1 ? 0 : prev + 1)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors z-10"
+                      >
+                        <ChevronRight className="w-5 h-5" />
+                      </button>
+                    </>
+                  )}
+                </>
+              ) : (
+                <div className="w-full h-96 bg-gray-200 rounded-2xl flex items-center justify-center">
+                  <span className="text-gray-500">No Image Available</span>
+                </div>
+              )}
+              
+              <Badge className="absolute top-4 left-4 bg-brand-600 z-10">
                 {car.category}
               </Badge>
               {car.is_available && (
-                <Badge className="absolute top-4 right-4 bg-green-600">
+                <Badge className="absolute top-4 right-4 bg-green-600 z-10">
                   Available
                 </Badge>
               )}
             </div>
             
-            {/* Additional Images */}
+            {/* Image Thumbnails */}
             {car.images && car.images.length > 1 && (
-              <div className="grid grid-cols-3 gap-2">
-                {car.images.slice(1, 4).map((img, index) => (
+              <div className="flex gap-2 overflow-x-auto">
+                {car.images.map((img, index) => (
                   <img 
                     key={index}
                     src={img.url} 
-                    alt={`${car.title} ${index + 2}`}
-                    className="w-full h-24 object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
-                    onClick={() => {
-                      const mainImageContainer = document.querySelector('.main-image-container');
-                      if (mainImageContainer) {
-                        const mainImage = mainImageContainer.querySelector('img') as HTMLImageElement;
-                        if (mainImage) {
-                          mainImage.src = img.url;
-                        }
-                      }
-                    }}
+                    alt={`${car.title} ${index + 1}`}
+                    className={`w-20 h-16 object-cover rounded-lg cursor-pointer transition-all ${
+                      index === currentImageIndex 
+                        ? 'ring-2 ring-brand-600 opacity-100' 
+                        : 'opacity-70 hover:opacity-100'
+                    }`}
+                    onClick={() => setCurrentImageIndex(index)}
                   />
                 ))}
               </div>
