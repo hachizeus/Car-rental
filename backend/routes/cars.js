@@ -73,7 +73,15 @@ router.post('/', auth, upload.fields([
         const result = await imagekit.upload({
           file: file.buffer,
           fileName: `car-video-${Date.now()}`,
-          folder: '/cars/videos'
+          folder: '/cars/videos',
+          useUniqueFileName: true,
+          transformation: {
+            pre: 'l-text,i-Watermark,fs-50,l-end',
+            post: [{
+              type: 'transformation',
+              value: 'w-800,h-600'
+            }]
+          }
         });
         car.videos.push(result.url);
       }
@@ -128,7 +136,8 @@ router.put('/:id', auth, upload.fields([
         const result = await imagekit.upload({
           file: file.buffer,
           fileName: `car-video-${Date.now()}`,
-          folder: '/cars/videos'
+          folder: '/cars/videos',
+          useUniqueFileName: true
         });
         car.videos.push(result.url);
       }
