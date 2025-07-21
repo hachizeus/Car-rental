@@ -8,13 +8,13 @@ services:
       - key: NODE_ENV
         value: production
       - key: MONGODB_URI
-        value: mongodb+srv://anziaelectronics:0a0b0c0d@anziaelectronics.vfsc5md.mongodb.net/?retryWrites=true&w=majority&appName=anziaelectronics
+        value: mongodb+srv://pattrentalservices:0a0b0c0d@pattrentals.qasxp8f.mongodb.net/?retryWrites=true&w=majority&appName=pattrentals
       - key: IMAGEKIT_PUBLIC_KEY
-        value: public_ahoxvdF2fShMnKvheyP8TQrAKhE=
+        value: public_KJXsctNYHEncZ0mrodRzZtRyGnM=
       - key: IMAGEKIT_PRIVATE_KEY
-        value: private_2giGXPBneW+SEkkpeZIG7djjhqw=
+        value: private_S3wnKiN/2ox5sjR3JHKBpxIPtfY=
       - key: IMAGEKIT_URL_ENDPOINT
-        value: https://ik.imagekit.io/q5jukn457
+        value: https://ik.imagekit.io/pz75ydgck
       - key: JWT_SECRET
         value: cd57c4c40415b68b920360bc1537f5d026ea58496733d8f37a948b12794e82c30e5b2a809f87a6c6ccc50f830aacedbe2b8922306ba90b322b17f41b3e03fc6c
       - key: PORT

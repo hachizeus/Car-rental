@@ -14,10 +14,10 @@
 ## Environment Variables (Add in Render Dashboard)
 
 ```
-MONGODB_URI=mongodb+srv://anziaelectronics:0a0b0c0d@anziaelectronics.vfsc5md.mongodb.net/?retryWrites=true&w=majority&appName=anziaelectronics
-IMAGEKIT_PUBLIC_KEY=public_ahoxvdF2fShMnKvheyP8TQrAKhE=
-IMAGEKIT_PRIVATE_KEY=private_2giGXPBneW+SEkkpeZIG7djjhqw=
-IMAGEKIT_URL_ENDPOINT=https://ik.imagekit.io/q5jukn457
+MONGODB_URI=mongodb+srv://pattrentalservices:0a0b0c0d@pattrentals.qasxp8f.mongodb.net/?retryWrites=true&w=majority&appName=pattrentals
+IMAGEKIT_PUBLIC_KEY=public_KJXsctNYHEncZ0mrodRzZtRyGnM=
+IMAGEKIT_PRIVATE_KEY=private_S3wnKiN/2ox5sjR3JHKBpxIPtfY=
+IMAGEKIT_URL_ENDPOINT=https://ik.imagekit.io/pz75ydgck
 JWT_SECRET=cd57c4c40415b68b920360bc1537f5d026ea58496733d8f37a948b12794e82c30e5b2a809f87a6c6ccc50f830aacedbe2b8922306ba90b322b17f41b3e03fc6c
 NODE_ENV=production
 ```
