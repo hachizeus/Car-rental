@@ -381,7 +381,7 @@ const EditCar = () => {
                   ))}
                 </div>
               </div>
-            ))
+            )}
 
             {/* New Videos */}
             <div>

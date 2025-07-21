@@ -142,7 +142,7 @@ const CarDetails = () => {
                   </div>
                 ))}
               </div>
-            ))
+            )}
           </div>
 
           {/* Car Details */}
