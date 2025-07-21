@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://car-rental-backend-n66g.onrender.com/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://car-rental-backend-n66g.onrender.com/api';
 
 export interface Car {
   _id: string;
