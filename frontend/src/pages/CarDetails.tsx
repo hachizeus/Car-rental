@@ -66,7 +66,7 @@ const CarDetails = () => {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Car Images & Videos */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="relative">
+            <div className="relative main-image-container">
               {(() => {
                 const primaryImage = car.images?.find(img => img.is_primary)?.url
                 return primaryImage ? (
@@ -74,7 +74,7 @@ const CarDetails = () => {
                     src={primaryImage} 
                     alt={car.title}
                     loading="lazy"
-                    className="w-full h-96 object-cover rounded-2xl"
+                    className="main-car-image w-full h-96 object-cover rounded-2xl"
                   />
                 ) : (
                   <div className="w-full h-96 bg-gray-200 rounded-2xl flex items-center justify-center">
@@ -100,7 +100,16 @@ const CarDetails = () => {
                     key={index}
                     src={img.url} 
                     alt={`${car.title} ${index + 2}`}
-                    className="w-full h-24 object-cover rounded-lg"
+                    className="w-full h-24 object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
+                    onClick={() => {
+                      const mainImageContainer = document.querySelector('.main-image-container');
+                      if (mainImageContainer) {
+                        const mainImage = mainImageContainer.querySelector('img') as HTMLImageElement;
+                        if (mainImage) {
+                          mainImage.src = img.url;
+                        }
+                      }
+                    }}
                   />
                 ))}
               </div>
