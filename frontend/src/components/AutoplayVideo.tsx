@@ -1,63 +1,20 @@
-import { useState, useEffect } from 'react';
-
 interface AutoplayVideoProps {
   videoUrl: string;
   className?: string;
 }
 
 export const AutoplayVideo = ({ videoUrl, className = '' }: AutoplayVideoProps) => {
-  const [error, setError] = useState(false);
-  const [videoSrc, setVideoSrc] = useState(videoUrl);
-  
-  useEffect(() => {
-    // Add query parameters to bypass cache and CORS issues
-    if (videoUrl.includes('imagekit.io')) {
-      setVideoSrc(`${videoUrl}?tr=f-auto`);
-    } else {
-      setVideoSrc(videoUrl);
-    }
-  }, [videoUrl]);
-  
-  const handleError = () => {
-    console.error(`Error loading video: ${videoUrl}`);
-    setError(true);
-  };
-  
-  if (error) {
-    return (
-      <div className={`flex items-center justify-center bg-black rounded-xl ${className}`}>
-        <div className="text-white text-center p-4">
-          <p className="mb-2">Unable to play this video format</p>
-          <a 
-            href={videoUrl} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-blue-400 hover:text-blue-300 underline"
-          >
-            Open video in new tab
-          </a>
-        </div>
-      </div>
-    );
-  }
-  
   return (
     <div className={`relative ${className}`}>
       <video
+        src={videoUrl}
         className="w-full h-full rounded-xl object-contain bg-black"
         autoPlay
         muted
         loop
         playsInline
         controls
-        crossOrigin="anonymous"
-        onError={handleError}
-      >
-        <source src={videoSrc} type="video/mp4" />
-        <source src={`${videoSrc}?tr=f-mp4`} type="video/mp4" />
-        <source src={videoUrl} type="video/webm" />
-        <p>Your browser doesn't support this video format</p>
-      </video>
+      />
     </div>
   );
 };
