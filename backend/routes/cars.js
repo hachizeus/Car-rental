@@ -152,4 +152,42 @@ router.delete('/:id', auth, async (req, res) => {
   }
 });
 
+// Delete image from car
+router.delete('/:id/image/:imageIndex', auth, async (req, res) => {
+  try {
+    const car = await Car.findById(req.params.id);
+    if (!car) return res.status(404).json({ error: 'Car not found' });
+    
+    const imageIndex = parseInt(req.params.imageIndex);
+    if (imageIndex >= 0 && imageIndex < car.images.length) {
+      car.images.splice(imageIndex, 1);
+      await car.save();
+      res.json({ message: 'Image deleted successfully' });
+    } else {
+      res.status(400).json({ error: 'Invalid image index' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Delete video from car
+router.delete('/:id/video/:videoIndex', auth, async (req, res) => {
+  try {
+    const car = await Car.findById(req.params.id);
+    if (!car) return res.status(404).json({ error: 'Car not found' });
+    
+    const videoIndex = parseInt(req.params.videoIndex);
+    if (videoIndex >= 0 && videoIndex < car.videos.length) {
+      car.videos.splice(videoIndex, 1);
+      await car.save();
+      res.json({ message: 'Video deleted successfully' });
+    } else {
+      res.status(400).json({ error: 'Invalid video index' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;

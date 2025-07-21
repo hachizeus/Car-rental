@@ -111,18 +111,26 @@ const CarDetails = () => {
               <div className="space-y-4">
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Videos</h3>
                 {car.videos.map((video, index) => (
-                  <video 
-                    key={index}
-                    controls
-                    controlsList="nodownload"
-                    crossOrigin="anonymous"
-                    className="w-full h-80 rounded-xl shadow-lg bg-black"
-                    style={{ objectFit: 'contain' }}
-                  >
-                    <source src={video} type="video/mp4" />
-                    <source src={video} type="video/webm" />
-                    Your browser does not support the video tag.
-                  </video>
+                  <div key={index} className="relative">
+                    <video 
+                      controls
+                      controlsList="nodownload"
+                      className="w-full h-80 rounded-xl shadow-lg bg-black"
+                      style={{ objectFit: 'contain' }}
+                      onError={(e) => {
+                        console.log('Video load error:', e);
+                        e.currentTarget.style.display = 'none';
+                        const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                        if (fallback) fallback.style.display = 'block';
+                      }}
+                    >
+                      <source src={video} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                    <div className="hidden w-full h-80 rounded-xl bg-gray-200 flex items-center justify-center">
+                      <span className="text-gray-500">Video unavailable</span>
+                    </div>
+                  </div>
                 ))}
               </div>
             )}

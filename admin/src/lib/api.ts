@@ -83,5 +83,25 @@ export const api = {
       }
     });
     if (!response.ok) throw new Error('Failed to delete car');
+  },
+
+  deleteImage: async (carId: string, imageIndex: number): Promise<void> => {
+    const response = await fetch(`${API_BASE_URL}/cars/${carId}/image/${imageIndex}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`
+      }
+    });
+    if (!response.ok) throw new Error('Failed to delete image');
+  },
+
+  deleteVideo: async (carId: string, videoIndex: number): Promise<void> => {
+    const response = await fetch(`${API_BASE_URL}/cars/${carId}/video/${videoIndex}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`
+      }
+    });
+    if (!response.ok) throw new Error('Failed to delete video');
   }
 };

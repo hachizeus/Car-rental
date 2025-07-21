@@ -291,8 +291,14 @@ const EditCar = () => {
                         size="sm"
                         variant="destructive"
                         className="absolute top-1 right-1 h-6 w-6 p-0"
-                        onClick={() => {
-                          toast.success('Image deletion not implemented yet');
+                        onClick={async () => {
+                          try {
+                            await api.deleteImage(id!, index);
+                            toast.success('Image deleted successfully');
+                            queryClient.invalidateQueries({ queryKey: ['car', id] });
+                          } catch (error: any) {
+                            toast.error(error.message || 'Failed to delete image');
+                          }
                         }}
                       >
                         <X className="h-3 w-3" />
@@ -348,8 +354,14 @@ const EditCar = () => {
                         size="sm"
                         variant="destructive"
                         className="h-6 w-6 p-0"
-                        onClick={() => {
-                          toast.success('Video deletion not implemented yet');
+                        onClick={async () => {
+                          try {
+                            await api.deleteVideo(id!, index);
+                            toast.success('Video deleted successfully');
+                            queryClient.invalidateQueries({ queryKey: ['car', id] });
+                          } catch (error: any) {
+                            toast.error(error.message || 'Failed to delete video');
+                          }
                         }}
                       >
                         <X className="h-3 w-3" />
