@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { supabase } from "@/lib/supabase"
+import { api } from "@/lib/api"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
@@ -11,49 +11,17 @@ const CarList = () => {
 
   const { data: cars, isLoading } = useQuery({
     queryKey: ['cars'],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('cars')
-        .select(`
-          *,
-          car_images(image_url, is_primary)
-        `)
-        .order('created_at', { ascending: false })
-      return data || []
-    }
+    queryFn: api.getCars
   })
 
   const deleteMutation = useMutation({
-    mutationFn: async (id: string) => {
-      // Get car images and videos to delete from storage
-      const { data: images } = await supabase.from('car_images').select('image_url').eq('car_id', id)
-      const { data: videos } = await supabase.from('car_videos').select('video_url').eq('car_id', id)
-      
-      // Delete files from storage
-      if (images) {
-        for (const img of images) {
-          const path = img.image_url.split('/').slice(-2).join('/')
-          await supabase.storage.from('car-images').remove([path])
-        }
-      }
-      if (videos) {
-        for (const vid of videos) {
-          const path = vid.video_url.split('/').slice(-2).join('/')
-          await supabase.storage.from('car-videos').remove([path])
-        }
-      }
-      
-
-      // Delete car (cascade will delete related records)
-      const { error } = await supabase.from('cars').delete().eq('id', id)
-      if (error) throw error
-    },
+    mutationFn: (id: string) => api.deleteCar(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cars'] })
       toast.success('Car deleted successfully')
     },
-    onError: () => {
-      toast.error('Failed to delete car')
+    onError: (error: any) => {
+      toast.error(error.message || 'Failed to delete car')
     }
   })
 
@@ -76,9 +44,9 @@ const CarList = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {cars?.map((car) => {
-          const primaryImage = car.car_images?.find(img => img.is_primary)?.image_url
+          const primaryImage = car.images?.find(img => img.is_primary)?.url
           return (
-          <Card key={car.id} className="bg-gray-800 border-gray-700">
+          <Card key={car._id} className="bg-gray-800 border-gray-700">
             {primaryImage && (
               <div className="h-48 overflow-hidden">
                 <img 
@@ -106,7 +74,7 @@ const CarList = () => {
               </div>
               <div className="flex gap-2">
                 <Button asChild size="sm" className="flex-1 bg-red-600 hover:bg-red-700 text-white border-0">
-                  <Link to={`/cars/edit/${car.id}`}>
+                  <Link to={`/cars/edit/${car._id}`}>
                     <Edit className="mr-2 h-4 w-4" />
                     Edit
                   </Link>
@@ -116,7 +84,7 @@ const CarList = () => {
                   variant="destructive"
                   onClick={() => {
                     if (window.confirm(`Are you sure you want to delete "${car.title}"? This action cannot be undone.`)) {
-                      deleteMutation.mutate(car.id)
+                      deleteMutation.mutate(car._id)
                     }
                   }}
                   disabled={deleteMutation.isPending}

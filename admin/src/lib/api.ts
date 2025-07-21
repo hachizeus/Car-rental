@@ -1,0 +1,81 @@
+const API_BASE_URL = 'http://localhost:5000/api';
+
+export interface Car {
+  _id: string;
+  title: string;
+  description: string;
+  price_per_day: number;
+  category: string;
+  location: string;
+  features: string[];
+  is_available: boolean;
+  engine?: string;
+  transmission?: string;
+  fuel_type?: string;
+  seats?: number;
+  year?: number;
+  mileage?: string;
+  images: Array<{
+    url: string;
+    is_primary: boolean;
+  }>;
+  videos: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+const getAuthToken = () => localStorage.getItem('token');
+
+export const api = {
+  // Auth
+  login: async (email: string, password: string) => {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    if (!response.ok) throw new Error('Login failed');
+    return response.json();
+  },
+
+  // Cars
+  getCars: async (): Promise<Car[]> => {
+    const response = await fetch(`${API_BASE_URL}/cars`);
+    if (!response.ok) throw new Error('Failed to fetch cars');
+    return response.json();
+  },
+
+  addCar: async (formData: FormData): Promise<Car> => {
+    const response = await fetch(`${API_BASE_URL}/cars`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`
+      },
+      body: formData
+    });
+    if (!response.ok) throw new Error('Failed to add car');
+    return response.json();
+  },
+
+  updateCar: async (id: string, formData: FormData): Promise<Car> => {
+    const response = await fetch(`${API_BASE_URL}/cars/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`
+      },
+      body: formData
+    });
+    if (!response.ok) throw new Error('Failed to update car');
+    return response.json();
+  },
+
+  deleteCar: async (id: string): Promise<void> => {
+    const response = await fetch(`${API_BASE_URL}/cars/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`
+      }
+    });
+    if (!response.ok) throw new Error('Failed to delete car');
+  }
+};

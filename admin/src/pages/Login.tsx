@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Car } from "lucide-react"
 import { toast } from "sonner"
-import { supabase } from "@/lib/supabase"
+import { api } from "@/lib/api"
 import logo from "@/assets/images/logo.png"
 
 const Login = () => {
@@ -18,30 +18,16 @@ const Login = () => {
     setIsLoading(true)
 
     try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('email', credentials.username)
-        .eq('role', 'admin')
-        .single()
-
-      if (error || !data) {
-        toast.error('Invalid credentials')
-        setIsLoading(false)
-        return
-      }
-
-      // Simple password check (in production, use proper hashing)
-      if (data.password === credentials.password) {
-        localStorage.setItem('isAdminLoggedIn', 'true')
-        localStorage.setItem('adminUser', JSON.stringify(data))
-        toast.success('Login successful!')
-        window.location.href = '/'
-      } else {
-        toast.error('Invalid credentials')
-      }
-    } catch (error) {
-      toast.error('Login failed')
+      const result = await api.login(credentials.username, credentials.password)
+      
+      localStorage.setItem('token', result.token)
+      localStorage.setItem('isAdminLoggedIn', 'true')
+      localStorage.setItem('adminUser', JSON.stringify(result.user))
+      
+      toast.success('Login successful!')
+      window.location.href = '/'
+    } catch (error: any) {
+      toast.error(error.message || 'Login failed')
     }
     
     setIsLoading(false)

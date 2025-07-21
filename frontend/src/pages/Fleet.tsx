@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Users, Fuel, Settings, Star, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
+import { api, Car } from "@/lib/api";
 
 
 const Fleet = () => {
@@ -21,16 +21,7 @@ const Fleet = () => {
 
   const { data: cars = [], isLoading } = useQuery({
     queryKey: ['cars'],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('cars')
-        .select(`
-          *,
-          car_images(image_url, is_primary)
-        `)
-        .order('created_at', { ascending: false })
-      return data || []
-    }
+    queryFn: api.getCars
   })
 
   // Filter cars based on search and filters
@@ -161,11 +152,11 @@ const Fleet = () => {
                 key={car.id} 
                 className="overflow-hidden hover:shadow-xl transition-all duration-300 group animate-fade-in cursor-pointer bg-white dark:bg-[#1a1a1a] border-gray-200 dark:border-gray-600" 
                 style={{ animationDelay: `${index * 100}ms` }}
-                onClick={() => handleCarClick(car.id)}
+                onClick={() => handleCarClick(car._id)}
               >
                 <div className="relative">
                   {(() => {
-                    const primaryImage = car.car_images?.find(img => img.is_primary)?.image_url
+                    const primaryImage = car.images?.find(img => img.is_primary)?.url
                     return primaryImage ? (
                       <img 
                         src={primaryImage} 
@@ -226,7 +217,7 @@ const Fleet = () => {
                       onClick={(e) => {
                         e.stopPropagation();
                         if (car.is_available) {
-                          handleCarClick(car.id);
+                          handleCarClick(car._id);
                         }
                       }}
                     >

@@ -3,6 +3,7 @@ import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Users, Award, Clock, Globe, Shield, Star, MapPin, Headphones } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import victorImage from "@/assets/images/victor.jpg";
 
 
 const About = () => {
@@ -68,10 +69,10 @@ const About = () => {
       description: "15+ years in automotive industry"
     },
     {
-      name: "David Ochieng",
-      position: "Customer Relations",
-      image: "/placeholder.svg",
-      description: "Dedicated to customer satisfaction"
+      name: "Victor Gathecha",
+      position: "Full Stack Software Developer",
+      image: victorImage,
+      description: "MIT graduate specializing in modern web technologies"
     }
   ];
 

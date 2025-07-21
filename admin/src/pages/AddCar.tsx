@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
-import { supabase } from "@/lib/supabase"
+import { api } from "@/lib/api"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -36,81 +36,35 @@ const AddCar = () => {
     mutationFn: async (data: typeof formData) => {
       setUploading(true)
       
-      // Insert car first
-      const { data: car, error: carError } = await supabase.from('cars').insert({
-        title: data.title,
-        description: data.description,
-        price_per_day: parseFloat(data.price_per_day),
-        category: data.category,
-        location: data.location,
-        features: data.features.split(',').map(f => f.trim()).filter(Boolean),
-        is_available: data.is_available,
-        engine: data.engine,
-        transmission: data.transmission,
-        fuel_type: data.fuel_type,
-        seats: data.seats,
-        year: data.year,
-        mileage: data.mileage
-      }).select().single()
+      const formDataToSend = new FormData()
       
-      if (carError) throw carError
+      // Add car data
+      Object.keys(data).forEach(key => {
+        formDataToSend.append(key, data[key as keyof typeof data] as string)
+      })
       
-      // Upload images
-      for (let i = 0; i < images.length; i++) {
-        const file = images[i]
-        const fileName = `${car.id}/${Date.now()}-${file.name}`
-        
-        const { error: uploadError } = await supabase.storage
-          .from('car-images')
-          .upload(fileName, file)
-        
-        if (uploadError) throw uploadError
-        
-        const { data: { publicUrl } } = supabase.storage
-          .from('car-images')
-          .getPublicUrl(fileName)
-        
-        await supabase.from('car_images').insert({
-          car_id: car.id,
-          image_url: publicUrl,
-          is_primary: i === 0
-        })
-      }
+      // Add images
+      images.forEach(file => {
+        formDataToSend.append('images', file)
+      })
       
-      // Upload videos (skip if fails)
-      for (const file of videos) {
-        try {
-          const fileName = `${car.id}/${Date.now()}-${file.name}`
-          
-          const { error: uploadError } = await supabase.storage
-            .from('car-videos')
-            .upload(fileName, file)
-          
-          if (!uploadError) {
-            const { data: { publicUrl } } = supabase.storage
-              .from('car-videos')
-              .getPublicUrl(fileName)
-            
-            await supabase.from('car_videos').insert({
-              car_id: car.id,
-              video_url: publicUrl
-            })
-          }
-        } catch (error) {
-          console.log('Video upload failed, continuing without video')
-        }
-      }
+      // Add videos
+      videos.forEach(file => {
+        formDataToSend.append('videos', file)
+      })
       
+      const result = await api.addCar(formDataToSend)
       setUploading(false)
+      return result
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cars'] })
-      toast.success('Car added successfully! (Videos may take longer to process)')
+      toast.success('Car added successfully!')
       navigate('/cars')
     },
-    onError: () => {
+    onError: (error: any) => {
       setUploading(false)
-      toast.error('Failed to add car')
+      toast.error(error.message || 'Failed to add car')
     }
   })
 
