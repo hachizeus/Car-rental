@@ -8,6 +8,7 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { VideoPlayer } from "@/components/VideoPlayer";
 
 import { ArrowLeft, Star, MapPin, Users, Fuel, Settings, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -132,25 +133,16 @@ const CarDetails = () => {
             )}
             
             {/* Videos */}
-            {car.videos && car.videos.length > 0 && (
+            {car.videos && Array.isArray(car.videos) && car.videos.filter(v => v && typeof v === 'string').length > 0 && (
               <div className="space-y-4">
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Videos</h3>
-                {car.videos.map((video, index) => (
+                {car.videos.filter(v => v && typeof v === 'string').map((video, index) => (
                   <div key={index} className="relative">
-                    <video 
-                      controls
-                      controlsList="nodownload"
-                      className="w-full h-80 rounded-xl shadow-lg bg-black"
-                      style={{ objectFit: 'contain' }}
-                      preload="metadata"
-                    >
-                      <source src={`${video}?tr=f-mp4`} type="video/mp4" />
-                      <p className="text-center text-gray-500 p-8">Video format not supported</p>
-                    </video>
+                    <VideoPlayer src={video} className="h-80" />
                   </div>
                 ))}
               </div>
-            )}
+            ))
           </div>
 
           {/* Car Details */}

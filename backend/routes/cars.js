@@ -70,20 +70,22 @@ router.post('/', auth, upload.fields([
     // Upload videos
     if (req.files.videos) {
       for (const file of req.files.videos) {
-        const result = await imagekit.upload({
-          file: file.buffer,
-          fileName: `car-video-${Date.now()}`,
-          folder: '/cars/videos',
-          useUniqueFileName: true,
-          transformation: {
-            pre: 'l-text,i-Watermark,fs-50,l-end',
-            post: [{
-              type: 'transformation',
-              value: 'w-800,h-600'
-            }]
-          }
-        });
-        car.videos.push(result.url);
+        try {
+          console.log(`Uploading video: ${file.originalname}, size: ${file.size} bytes`);
+          const result = await imagekit.upload({
+            file: file.buffer,
+            fileName: `car-video-${Date.now()}`,
+            folder: '/cars/videos',
+            useUniqueFileName: true,
+            // Remove transformations that might be causing issues
+            // Let ImageKit handle the video as is
+          });
+          console.log(`Video uploaded successfully: ${result.url}`);
+          car.videos.push(result.url);
+        } catch (error) {
+          console.error(`Error uploading video: ${file.originalname}`, error);
+          // Continue with other videos even if one fails
+        }
       }
     }
 
@@ -133,13 +135,20 @@ router.put('/:id', auth, upload.fields([
     // Add new videos
     if (req.files.videos) {
       for (const file of req.files.videos) {
-        const result = await imagekit.upload({
-          file: file.buffer,
-          fileName: `car-video-${Date.now()}`,
-          folder: '/cars/videos',
-          useUniqueFileName: true
-        });
-        car.videos.push(result.url);
+        try {
+          console.log(`Updating car: ${car._id}, uploading video: ${file.originalname}, size: ${file.size} bytes`);
+          const result = await imagekit.upload({
+            file: file.buffer,
+            fileName: `car-video-${Date.now()}`,
+            folder: '/cars/videos',
+            useUniqueFileName: true
+          });
+          console.log(`Video uploaded successfully: ${result.url}`);
+          car.videos.push(result.url);
+        } catch (error) {
+          console.error(`Error uploading video: ${file.originalname}`, error);
+          // Continue with other videos even if one fails
+        }
       }
     }
 

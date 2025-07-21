@@ -342,13 +342,24 @@ const EditCar = () => {
             </div>
 
             {/* Existing Videos */}
-            {car?.videos && car.videos.length > 0 && (
+            {car?.videos && Array.isArray(car.videos) && car.videos.filter(v => v && typeof v === 'string').length > 0 && (
               <div>
                 <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Current Videos</label>
                 <div className="space-y-2">
-                  {car.videos.map((video, index) => (
+                  {car.videos.filter(v => v && typeof v === 'string').map((video, index) => (
                     <div key={index} className="relative bg-gray-100 dark:bg-gray-700 p-2 rounded flex justify-between items-center">
-                      <span className="text-sm text-gray-900 dark:text-gray-100">Video {index + 1}</span>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm text-gray-900 dark:text-gray-100">Video {index + 1}</span>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          className="h-6 px-2 py-0 text-xs"
+                          onClick={() => window.open(video, '_blank')}
+                        >
+                          Preview
+                        </Button>
+                      </div>
                       <Button
                         type="button"
                         size="sm"
@@ -370,7 +381,7 @@ const EditCar = () => {
                   ))}
                 </div>
               </div>
-            )}
+            ))
 
             {/* New Videos */}
             <div>

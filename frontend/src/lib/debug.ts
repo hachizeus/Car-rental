@@ -1,42 +1,61 @@
-import { supabase } from './supabase';
+/**
+ * Debug utility for logging in development environment
+ */
 
-export const testAnalytics = async () => {
-  console.log('Testing analytics connection...');
+const isDevEnvironment = import.meta.env.DEV;
+
+/**
+ * Log debug information only in development environment
+ */
+export const debug = {
+  log: (...args: any[]) => {
+    if (isDevEnvironment) {
+      console.log('[DEBUG]', ...args);
+    }
+  },
   
-  try {
-    // Test page_views table
-    const { data: pageViews, error: pageError } = await supabase
-      .from('page_views')
-      .select('*')
-      .limit(5);
-    
-    console.log('Page views:', pageViews, 'Error:', pageError);
-    
-    // Test car_views table
-    const { data: carViews, error: carError } = await supabase
-      .from('car_views')
-      .select('*')
-      .limit(5);
-    
-    console.log('Car views:', carViews, 'Error:', carError);
-    
-    // Test insert
-    const { data: testInsert, error: insertError } = await supabase
-      .from('page_views')
-      .insert({
-        page: 'test',
-        timestamp: new Date().toISOString(),
-        user_agent: 'test',
-        referrer: null
-      })
-      .select();
-    
-    console.log('Test insert:', testInsert, 'Error:', insertError);
-    
-  } catch (error) {
-    console.error('Analytics test failed:', error);
+  error: (...args: any[]) => {
+    if (isDevEnvironment) {
+      console.error('[DEBUG ERROR]', ...args);
+    }
+  },
+  
+  warn: (...args: any[]) => {
+    if (isDevEnvironment) {
+      console.warn('[DEBUG WARN]', ...args);
+    }
+  },
+  
+  info: (...args: any[]) => {
+    if (isDevEnvironment) {
+      console.info('[DEBUG INFO]', ...args);
+    }
+  },
+  
+  /**
+   * Inspect an object's structure and content
+   */
+  inspect: (obj: any, label = 'Object Inspection') => {
+    if (isDevEnvironment) {
+      console.group(label);
+      
+      if (obj === null) {
+        console.log('null');
+      } else if (obj === undefined) {
+        console.log('undefined');
+      } else if (Array.isArray(obj)) {
+        console.log(`Array with ${obj.length} items:`);
+        obj.forEach((item, index) => {
+          console.log(`[${index}]:`, item);
+        });
+      } else if (typeof obj === 'object') {
+        console.log(obj);
+        console.table(obj);
+      } else {
+        console.log(`${typeof obj}:`, obj);
+      }
+      
+      console.groupEnd();
+    }
   }
 };
-
-// Call this in browser console to test
-(window as any).testAnalytics = testAnalytics;
