@@ -3,6 +3,8 @@ import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Users, Award, Clock, Globe, Shield, Star, MapPin, Headphones } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { FAQSection } from "@/components/FAQSection";
+import { SEOHead } from "@/components/SEOHead";
 import victorImage from "@/assets/images/victor.jpg";
 import patImage from "@/assets/images/pat.jpg";
 
@@ -79,6 +81,11 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#141414]">
+      <SEOHead 
+        title="About Us | PattRentals - Premium Car Rental Services" 
+        description="Learn about PattRentals, Kenya's trusted car rental service with over 500 satisfied customers and premium vehicles for all your needs."
+        keywords="car rental, about us, premium cars, Kenya car rental, PattRentals history"
+      />
       <Header />
       
       {/* Animated Hero Section */}
@@ -206,6 +213,9 @@ const About = () => {
           </div>
         </div>
       </section>
+
+      {/* FAQ Section */}
+      <FAQSection />
 
       <Footer />
     </div>
