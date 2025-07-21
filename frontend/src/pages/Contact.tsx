@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+
 import { toast } from "sonner";
 
 
@@ -36,15 +36,6 @@ const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      // Save to database
-      await supabase.from('contact_submissions').insert({
-        name: `${formData.firstName} ${formData.lastName}`,
-        email: formData.email,
-        phone: formData.phone,
-        subject: formData.subject,
-        message: formData.message
-      });
-
       // Send email using FormSubmit (no API key required)
       const formData2 = new FormData();
       formData2.append('name', `${formData.firstName} ${formData.lastName}`);
