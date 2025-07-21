@@ -113,12 +113,16 @@ const CarDetails = () => {
                 {car.videos.map((video, index) => (
                   <video 
                     key={index}
-                    src={video} 
                     controls
                     controlsList="nodownload"
+                    crossOrigin="anonymous"
                     className="w-full h-80 rounded-xl shadow-lg bg-black"
                     style={{ objectFit: 'contain' }}
-                  />
+                  >
+                    <source src={video} type="video/mp4" />
+                    <source src={video} type="video/webm" />
+                    Your browser does not support the video tag.
+                  </video>
                 ))}
               </div>
             )}

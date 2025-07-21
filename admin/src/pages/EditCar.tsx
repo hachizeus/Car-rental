@@ -286,6 +286,17 @@ const EditCar = () => {
                           Primary
                         </span>
                       )}
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="destructive"
+                        className="absolute top-1 right-1 h-6 w-6 p-0"
+                        onClick={() => {
+                          toast.success('Image deletion not implemented yet');
+                        }}
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
                     </div>
                   ))}
                 </div>
@@ -332,6 +343,17 @@ const EditCar = () => {
                   {car.videos.map((video, index) => (
                     <div key={index} className="relative bg-gray-100 dark:bg-gray-700 p-2 rounded flex justify-between items-center">
                       <span className="text-sm text-gray-900 dark:text-gray-100">Video {index + 1}</span>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="destructive"
+                        className="h-6 w-6 p-0"
+                        onClick={() => {
+                          toast.success('Video deletion not implemented yet');
+                        }}
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
                     </div>
                   ))}
                 </div>
