@@ -1,7 +1,9 @@
 /* CSS fixes */
 
-/* Fix for -webkit-text-size-adjust error */
+/* Fix for text-size-adjust errors */
 html {
+  /* Use each vendor prefix separately with proper syntax */
   -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
 }

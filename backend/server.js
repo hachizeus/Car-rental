@@ -20,8 +20,12 @@ app.use(helmet());
 app.use(compression());
 app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:3001', 'https://car-rental-admin-r2oz.onrender.com', 'https://car-rental-frontend-7jwd.onrender.com'],
-  credentials: true
+  credentials: true,
+  exposedHeaders: ['Content-Length', 'Content-Type', 'Content-Disposition']
 }));
+
+// Add CORS preflight for all routes
+app.options('*', cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(basicLimiter); // Apply rate limiting to all routes

@@ -1,19 +1,29 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { debug } from '@/lib/debug';
+import { getProxiedVideoUrl } from '@/lib/videoProxy';
+import { VideoFallback } from './VideoFallback';
 
 interface VideoPlayerProps {
   src: string;
   className?: string;
 }
 
-export const VideoPlayer = ({ src, className = '' }: VideoPlayerProps) => {
+export const VideoPlayer = ({ src: originalSrc, className = '' }: VideoPlayerProps) => {
+  // Process the source URL to handle CORS issues
+  const src = getProxiedVideoUrl(originalSrc);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     // Reset states when src changes
     setError(false);
     setLoading(true);
+    
+    // Add crossOrigin attribute to fix CORS issues
+    if (videoRef.current) {
+      videoRef.current.crossOrigin = "anonymous";
+    }
   }, [src]);
 
   const handleError = () => {
@@ -28,13 +38,7 @@ export const VideoPlayer = ({ src, className = '' }: VideoPlayerProps) => {
   };
 
   if (error) {
-    return (
-      <div className={`flex items-center justify-center bg-gray-800 rounded-xl ${className}`} style={{ minHeight: '200px' }}>
-        <p className="text-white text-center p-4">
-          Unable to load video. The format may not be supported or the video may no longer be available.
-        </p>
-      </div>
-    );
+    return <VideoFallback videoUrl={originalSrc} className={className} />;
   }
 
   return (
@@ -45,15 +49,18 @@ export const VideoPlayer = ({ src, className = '' }: VideoPlayerProps) => {
         </div>
       )}
       <video
+        ref={videoRef}
         controls
         controlsList="nodownload"
         className={`w-full rounded-xl shadow-lg bg-black ${className}`}
         style={{ objectFit: 'contain' }}
         preload="metadata"
+        crossOrigin="anonymous"
         onError={handleError}
         onLoadedData={handleLoadedData}
       >
         <source src={src} type="video/mp4" />
+        <source src={originalSrc} type="video/mp4" />
         <source src={src} type="video/webm" />
         <p className="text-center text-gray-500 p-8">Video format not supported by your browser</p>
       </video>

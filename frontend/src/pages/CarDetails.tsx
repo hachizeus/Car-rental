@@ -8,7 +8,8 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { VideoPlayer } from "@/components/VideoPlayer";
+import { VideoFallback } from "@/components/VideoFallback";
+import { useState } from "react";
 
 import { ArrowLeft, Star, MapPin, Users, Fuel, Settings, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -138,7 +139,7 @@ const CarDetails = () => {
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Videos</h3>
                 {car.videos.filter(v => v && typeof v === 'string').map((video, index) => (
                   <div key={index} className="relative">
-                    <VideoPlayer src={video} className="h-80" />
+                    <VideoFallback videoUrl={video} className="h-80" />
                   </div>
                 ))}
               </div>
