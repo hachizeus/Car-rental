@@ -12,15 +12,13 @@ const cacheMiddleware = (ttl = 300) => {
       return next();
     }
     
-    // Skip caching for specific routes
-    if (req.path.includes('/cars/')) {
-      // Skip caching for individual car details
-      return next();
-    }
-
+    // Skip caching for all routes to avoid path-to-regexp errors
+    return next();
+    
+    /* Disabled caching logic
     const key = req.originalUrl;
     const cachedResponse = cache.get(key);
-
+    
     if (cachedResponse) {
       res.json(cachedResponse);
       return;
@@ -39,6 +37,7 @@ const cacheMiddleware = (ttl = 300) => {
     };
 
     next();
+    */
   };
 };
 

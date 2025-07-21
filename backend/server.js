@@ -18,33 +18,19 @@ const app = express();
 // Security and optimization middleware
 app.use(helmet());
 app.use(compression());
-app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3001', 'https://car-rental-admin-r2oz.onrender.com', 'https://car-rental-frontend-7jwd.onrender.com'],
-  credentials: true,
-  exposedHeaders: ['Content-Length', 'Content-Type', 'Content-Disposition']
-}));
+app.use(cors());
 
-// Add CORS preflight for all routes
-app.options('*', cors({
-  origin: ['http://localhost:5173', 'http://localhost:3001', 'https://car-rental-admin-r2oz.onrender.com', 'https://car-rental-frontend-7jwd.onrender.com'],
-  credentials: true
-}));
+// Simple CORS setup
+app.options('*', cors());
 
-// Disable caching for API responses
+// Simple no-cache headers
 app.use((req, res, next) => {
-  // Don't set headers for non-existent response
-  if (res.headersSent) {
-    return next();
-  }
-  
-  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
-  res.set('Pragma', 'no-cache');
-  res.set('Expires', '0');
+  res.header('Cache-Control', 'no-cache');
   next();
 });
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-app.use(basicLimiter); // Apply rate limiting to all routes
+// Removed basicLimiter to avoid potential issues
 
 // Logging middleware
 app.use(requestIdMiddleware);
@@ -56,8 +42,8 @@ app.get('/health', (req, res) => {
 });
 
 // Routes
-app.use('/api/auth', authLimiter, authRoutes);
-app.use('/api/cars', cacheMiddleware(300), carRoutes);
+app.use('/api/auth', authRoutes); // Removed authLimiter
+app.use('/api/cars', carRoutes); // Removed cacheMiddleware
 
 // 404 handler
 app.use((req, res) => {
