@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Heart, Users, Settings, Fuel, Star, MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
+import { api } from "@/lib/api";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 export const FeaturedCars = () => {
@@ -11,20 +11,12 @@ export const FeaturedCars = () => {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation();
   const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation();
 
-  const { data: cars = [], isLoading } = useQuery({
+  const { data: allCars = [], isLoading } = useQuery({
     queryKey: ['featured-cars'],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('cars')
-        .select(`
-          *,
-          car_images(image_url, is_primary)
-        `)
-        .eq('is_available', true)
-        .limit(6)
-      return data || []
-    }
+    queryFn: api.getCars
   })
+
+  const cars = allCars.filter(car => car.is_available).slice(0, 6)
 
   if (isLoading) {
     return (
@@ -61,14 +53,14 @@ export const FeaturedCars = () => {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8" ref={gridRef}>
           {cars.map((car, index) => (
             <Card 
-              key={car.id} 
+              key={car._id} 
               className="group bg-white dark:bg-[#1a1a1a] shadow-soft hover:shadow-strong transition-all duration-500 rounded-2xl overflow-hidden hover-lift cursor-pointer border border-gray-200 dark:border-gray-600 animate-fade-in"
               style={{ animationDelay: `${index * 100}ms` }}
-              onClick={() => handleCarClick(car.id)}
+              onClick={() => handleCarClick(car._id)}
             >
               <div className="relative overflow-hidden">
                 {(() => {
-                  const primaryImage = car.car_images?.find(img => img.is_primary)?.image_url
+                  const primaryImage = car.images?.find(img => img.is_primary)?.url
                   return primaryImage ? (
                     <img 
                       src={primaryImage} 
@@ -147,7 +139,7 @@ export const FeaturedCars = () => {
                     className="w-full bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 text-white font-semibold py-2.5 sm:py-3 rounded-xl shadow-medium hover:shadow-strong transition-all duration-300"
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleCarClick(car.id);
+                      handleCarClick(car._id);
                     }}
                   >
                     Book Now

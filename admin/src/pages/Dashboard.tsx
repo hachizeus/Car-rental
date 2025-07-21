@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { supabase } from "@/lib/supabase"
+import { api } from "@/lib/api"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
@@ -8,10 +8,7 @@ import { Car, TrendingUp, Users, Eye, Calendar } from "lucide-react"
 const Dashboard = () => {
   const { data: cars } = useQuery({
     queryKey: ['cars'],
-    queryFn: async () => {
-      const { data } = await supabase.from('cars').select('*')
-      return data || []
-    }
+    queryFn: api.getCars
   })
   
 
