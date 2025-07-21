@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
+import { api } from "@/lib/api";
 
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -16,18 +16,7 @@ const CarDetails = () => {
 
   const { data: car, isLoading } = useQuery({
     queryKey: ['car', id],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('cars')
-        .select(`
-          *,
-          car_images(image_url, is_primary),
-          car_videos(video_url)
-        `)
-        .eq('id', id)
-        .single()
-      return data
-    },
+    queryFn: () => api.getCar(id!),
     enabled: !!id
   });
 
@@ -79,7 +68,7 @@ const CarDetails = () => {
           <div className="lg:col-span-2 space-y-4">
             <div className="relative">
               {(() => {
-                const primaryImage = car.car_images?.find(img => img.is_primary)?.image_url
+                const primaryImage = car.images?.find(img => img.is_primary)?.url
                 return primaryImage ? (
                   <img 
                     src={primaryImage} 
@@ -104,12 +93,12 @@ const CarDetails = () => {
             </div>
             
             {/* Additional Images */}
-            {car.car_images && car.car_images.length > 1 && (
+            {car.images && car.images.length > 1 && (
               <div className="grid grid-cols-3 gap-2">
-                {car.car_images.slice(1, 4).map((img, index) => (
+                {car.images.slice(1, 4).map((img, index) => (
                   <img 
                     key={index}
-                    src={img.image_url} 
+                    src={img.url} 
                     alt={`${car.title} ${index + 2}`}
                     className="w-full h-24 object-cover rounded-lg"
                   />
@@ -118,13 +107,13 @@ const CarDetails = () => {
             )}
             
             {/* Videos */}
-            {car.car_videos && car.car_videos.length > 0 && (
+            {car.videos && car.videos.length > 0 && (
               <div className="space-y-4">
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Videos</h3>
-                {car.car_videos.map((video, index) => (
+                {car.videos.map((video, index) => (
                   <video 
                     key={index}
-                    src={video.video_url} 
+                    src={video} 
                     controls
                     controlsList="nodownload"
                     className="w-full h-80 rounded-xl shadow-lg bg-black"
