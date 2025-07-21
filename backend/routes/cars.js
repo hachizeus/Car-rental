@@ -183,11 +183,29 @@ router.delete('/:id/image/:imageIndex', auth, async (req, res) => {
 // Delete video from car
 router.delete('/:id/video/:videoIndex', auth, async (req, res) => {
   try {
+    // Validate parameters
+    if (!req.params.id || !req.params.videoIndex) {
+      return res.status(400).json({ error: 'Missing required parameters' });
+    }
+    
     const car = await Car.findById(req.params.id);
     if (!car) return res.status(404).json({ error: 'Car not found' });
     
+    // Ensure videoIndex is a valid number
     const videoIndex = parseInt(req.params.videoIndex);
+    if (isNaN(videoIndex)) {
+      return res.status(400).json({ error: 'Video index must be a number' });
+    }
+    
+    // Check if videos array exists and has the specified index
+    if (!Array.isArray(car.videos)) {
+      car.videos = [];
+      await car.save();
+      return res.status(400).json({ error: 'No videos found for this car' });
+    }
+    
     if (videoIndex >= 0 && videoIndex < car.videos.length) {
+      // Remove the video at the specified index
       car.videos.splice(videoIndex, 1);
       await car.save();
       res.json({ message: 'Video deleted successfully' });
@@ -195,7 +213,8 @@ router.delete('/:id/video/:videoIndex', auth, async (req, res) => {
       res.status(400).json({ error: 'Invalid video index' });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error deleting video:', error);
+    res.status(500).json({ error: error.message || 'Failed to delete video' });
   }
 });
 

@@ -1,0 +1,7 @@
+/* CSS fixes */
+
+/* Fix for -webkit-text-size-adjust error */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}

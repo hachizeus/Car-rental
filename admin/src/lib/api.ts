@@ -1,3 +1,5 @@
+import { withErrorHandling } from './apiErrorHandler';
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://car-rental-backend-n66g.onrender.com/api';
 
 export interface Car {
@@ -96,12 +98,24 @@ export const api = {
   },
 
   deleteVideo: async (carId: string, videoIndex: number): Promise<void> => {
-    const response = await fetch(`${API_BASE_URL}/cars/${carId}/video/${videoIndex}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${getAuthToken()}`
+    return withErrorHandling(async () => {
+      // Validate inputs before making the request
+      if (!carId || videoIndex === undefined || videoIndex < 0) {
+        throw new Error('Invalid car ID or video index');
       }
-    });
-    if (!response.ok) throw new Error('Failed to delete video');
+      
+      const response = await fetch(`${API_BASE_URL}/cars/${carId}/video/${videoIndex}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${getAuthToken()}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to delete video');
+      }
+    }, 'Failed to delete video');
   }
 };

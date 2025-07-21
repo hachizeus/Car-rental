@@ -5,18 +5,36 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { useState, useEffect } from "react";
 
 export const PremiumFleet = () => {
   const navigate = useNavigate();
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation();
   const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation();
+  const [processedCars, setProcessedCars] = useState<any[]>([]);
 
   const { data: allCars = [], isLoading } = useQuery({
     queryKey: ['featured-cars'],
     queryFn: api.getCars
   })
-
-  const cars = allCars.filter(car => car.is_available).slice(0, 6)
+  
+  // Process cars to handle potential issues
+  useEffect(() => {
+    if (allCars && allCars.length > 0) {
+      const filtered = allCars
+        .filter(car => car.is_available)
+        .map(car => ({
+          ...car,
+          // Filter out any problematic videos
+          videos: Array.isArray(car.videos) ? car.videos.filter(url => typeof url === 'string' && url.trim() !== '') : []
+        }))
+        .slice(0, 6);
+      
+      setProcessedCars(filtered);
+    }
+  }, [allCars]);
+  
+  const cars = processedCars
 
   if (isLoading) {
     return (
