@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 
@@ -8,11 +9,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-import { ArrowLeft, Star, MapPin, Users, Fuel, Settings } from "lucide-react";
+import { ArrowLeft, Star, MapPin, Users, Fuel, Settings, ChevronLeft, ChevronRight } from "lucide-react";
 
 const CarDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const { data: car, isLoading } = useQuery({
     queryKey: ['car', id],
