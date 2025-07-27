@@ -12,36 +12,33 @@ export const Hero = () => {
   const { ref: statsRef, isVisible: statsVisible } = useScrollAnimation();
   
   return (
-    <section className="relative bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:bg-[#141414] py-2 overflow-hidden texture-light dark:texture-none">
-      <div className="max-w-none mx-2 relative">
-        <Card className="bg-transparent shadow-strong border border-gray-200 dark:border-gray-600 rounded-3xl overflow-hidden relative">
-          {/* Video Background with Fallback */}
-          <div className="absolute inset-0 w-full h-full">
-            <video 
-              autoPlay 
-              muted 
-              loop 
-              playsInline
-              preload="none"
-              className="absolute inset-0 w-full h-full object-cover z-0"
-              style={{ filter: 'brightness(0.7)' }}
-              onError={(e) => {
-                console.log('Video failed to load, hiding video element');
-                e.currentTarget.style.display = 'none';
-              }}
-            >
-              <source src={videoSrc} type="video/mp4" />
-            </video>
-            {/* Fallback gradient background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black -z-10"></div>
-          </div>
-          {/* Dark overlay for text readability */}
-          <div className="absolute inset-0 bg-black/30 z-1"></div>
-          
-          
-          
-          <div className="p-8 sm:p-12 md:p-16 lg:p-24 py-16 sm:py-20 md:py-24 lg:py-32 relative z-10">
-            <div className="max-w-xs sm:max-w-lg md:max-w-2xl" ref={heroRef}>
+    <section className="relative w-full h-screen overflow-hidden">
+      {/* Video Background with Fallback */}
+      <div className="absolute inset-0 w-full h-full">
+        <video 
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+          preload="none"
+          className="absolute inset-0 w-full h-full object-cover z-0"
+          style={{ filter: 'brightness(0.7)' }}
+          onError={(e) => {
+            console.log('Video failed to load, hiding video element');
+            e.currentTarget.style.display = 'none';
+          }}
+        >
+          <source src={videoSrc} type="video/mp4" />
+        </video>
+        {/* Fallback gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black -z-10"></div>
+      </div>
+      {/* Dark overlay for text readability */}
+      <div className="absolute inset-0 bg-black/30 z-1"></div>
+      
+      <div className="absolute inset-0 flex items-center justify-start z-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-xs sm:max-w-lg md:max-w-2xl" ref={heroRef}>
           <div className={`space-y-4 sm:space-y-6 lg:space-y-8 ${heroVisible ? 'animate-slide-in-left' : 'opacity-0'}`}>
             {/* Trust indicators */}
             <div className="flex items-center space-x-2 sm:space-x-3 text-xs">
@@ -105,9 +102,8 @@ export const Hero = () => {
               </div>
             </div>
           </div>
-            </div>
           </div>
-        </Card>
+        </div>
       </div>
     </section>
   );

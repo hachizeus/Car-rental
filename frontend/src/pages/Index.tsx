@@ -80,15 +80,19 @@ const Index = () => {
         />
       </Helmet>
       
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:bg-[#141414]">
-        <Header />
-        <Hero />
-        <PremiumFleet />
-        <AboutSection />
-        <div className={`bg-gray-50 dark:bg-[#141414] texture-subtle transition-all duration-700 ${statsVisible ? 'opacity-100 translate-y-0' : 'opacity-100 translate-y-0'}`} ref={statsRef}>
-          <Stats />
+      <div className="min-h-screen">
+        <div className="relative">
+          <Header />
+          <Hero />
         </div>
-        <Footer />
+        <div className="bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:bg-[#141414]">
+          <PremiumFleet />
+          <AboutSection />
+          <div className={`bg-gray-50 dark:bg-[#141414] texture-subtle transition-all duration-700 ${statsVisible ? 'opacity-100 translate-y-0' : 'opacity-100 translate-y-0'}`} ref={statsRef}>
+            <Stats />
+          </div>
+          <Footer />
+        </div>
       </div>
     </>
   );
