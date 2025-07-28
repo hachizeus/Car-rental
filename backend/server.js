@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const { MongoClient } = require('mongodb');
 
 const authRoutes = require('./routes/auth');
 const carRoutes = require('./routes/cars');
@@ -49,16 +50,30 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
+// Direct MongoDB connection test
+app.get('/test-direct', async (req, res) => {
+  const client = new MongoClient(process.env.MONGODB_URI);
+  try {
+    await client.connect();
+    const db = client.db();
+    const collections = await db.listCollections().toArray();
+    res.json({ 
+      status: 'Connected directly',
+      database: db.databaseName,
+      collections: collections.map(c => c.name)
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  } finally {
+    await client.close();
+  }
+});
+
 // MongoDB connection test
 app.get('/test-db', async (req, res) => {
   try {
     const dbState = mongoose.connection.readyState;
     const states = { 0: 'disconnected', 1: 'connected', 2: 'connecting', 3: 'disconnecting' };
-    
-    // Try a simple ping
-    if (dbState === 1) {
-      await mongoose.connection.db.admin().ping();
-    }
     
     res.json({ 
       database: states[dbState],
