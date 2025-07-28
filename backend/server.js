@@ -15,6 +15,7 @@ const corsOptions = {
     'http://localhost:3000',
     'http://localhost:3001',
     'https://yourdomain.co.za',
+    'https://car-rental-admin-r2oz.onrender.com',
     /\.netlify\.app$/,
     /\.vercel\.app$/,
     /\.onrender\.com$/
