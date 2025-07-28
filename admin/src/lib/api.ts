@@ -1,6 +1,9 @@
 import { withErrorHandling } from './apiErrorHandler';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://pattrental.co.ke/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://pattrental.co.ke/api';
+
+// Cache buster
+console.log('API Base URL:', API_BASE_URL);
 
 export interface Car {
   _id: string;
