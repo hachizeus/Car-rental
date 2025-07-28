@@ -68,7 +68,6 @@ app.use((err, req, res, next) => {
 mongoose.connect(process.env.MONGODB_URI, {
   serverSelectionTimeoutMS: 30000,
   socketTimeoutMS: 45000,
-  bufferMaxEntries: 0,
   maxPoolSize: 10,
   minPoolSize: 5
 })
