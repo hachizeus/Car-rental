@@ -28,6 +28,26 @@ export interface Car {
 
 const getAuthToken = () => localStorage.getItem('token');
 
+// Retry function for network requests
+const fetchWithRetry = async (url: string, options: RequestInit, retries = 3): Promise<Response> => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          ...options.headers,
+        },
+      });
+      return response;
+    } catch (error) {
+      if (i === retries - 1) throw error;
+      await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+    }
+  }
+  throw new Error('Max retries exceeded');
+};
+
 export const api = {
   // Auth
   login: async (email: string, password: string) => {
@@ -42,11 +62,8 @@ export const api = {
 
   // Cars
   getCars: async (): Promise<Car[]> => {
-    const response = await fetch(`${API_BASE_URL}/cars`, {
+    const response = await fetchWithRetry(`${API_BASE_URL}/cars`, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
     });
     if (!response.ok) throw new Error('Failed to fetch cars');
     return response.json();
@@ -59,7 +76,7 @@ export const api = {
   },
 
   addCar: async (formData: FormData): Promise<Car> => {
-    const response = await fetch(`${API_BASE_URL}/cars`, {
+    const response = await fetchWithRetry(`${API_BASE_URL}/cars`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${getAuthToken()}`
