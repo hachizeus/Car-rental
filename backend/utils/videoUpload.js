@@ -22,11 +22,7 @@ const uploadVideo = async (imagekit, file) => {
       // Important: Set these options for better video compatibility
       responseFields: ['tags', 'customCoordinates', 'isPrivateFile', 'url', 'thumbnailUrl'],
       // Add public read permissions
-      isPrivateFile: false,
-      // Add metadata
-      customMetadata: {
-        contentType: file.mimetype || 'video/mp4'
-      }
+      isPrivateFile: false
     };
     
     // For large videos, add additional options
