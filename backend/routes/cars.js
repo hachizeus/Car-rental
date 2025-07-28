@@ -79,20 +79,25 @@ router.post('/', auth, upload.fields([
     // Upload videos
     if (req.files && req.files.videos) {
       console.log(`Processing ${req.files.videos.length} videos`);
+      console.log('Video files details:', req.files.videos.map(f => ({ name: f.originalname, size: f.size, type: f.mimetype })));
+      
       for (const file of req.files.videos) {
         try {
-          console.log(`Uploading video: ${file.originalname}`);
+          console.log(`Uploading video: ${file.originalname}, size: ${file.size}, type: ${file.mimetype}`);
           const videoUrl = await uploadVideo(imagekit, file);
           console.log(`Video uploaded successfully: ${videoUrl}`);
           car.videos.push(videoUrl);
         } catch (error) {
           console.error(`Error uploading video: ${file.originalname}`, error);
-          // Continue with other videos even if one fails
+          console.error('Full error details:', error.stack);
+          // Don't fail the entire request, just skip this video
         }
       }
       console.log(`Total videos after upload: ${car.videos.length}`);
+      console.log('Final car videos array:', car.videos);
     } else {
       console.log('No videos found in request');
+      console.log('Request files:', req.files ? Object.keys(req.files) : 'No files');
     }
 
     await car.save();
