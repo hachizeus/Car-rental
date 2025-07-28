@@ -42,7 +42,12 @@ export const api = {
 
   // Cars
   getCars: async (): Promise<Car[]> => {
-    const response = await fetch(`${API_BASE_URL}/cars`);
+    const response = await fetch(`${API_BASE_URL}/cars`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     if (!response.ok) throw new Error('Failed to fetch cars');
     return response.json();
   },

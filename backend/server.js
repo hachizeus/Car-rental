@@ -8,24 +8,13 @@ const carRoutes = require('./routes/cars');
 
 const app = express();
 
-// CORS configuration
-const corsOptions = {
-  origin: [
-    'http://localhost:5173',
-    'http://localhost:3000',
-    'http://localhost:3001',
-    'https://yourdomain.co.za',
-    'https://car-rental-admin-r2oz.onrender.com',
-    /\.netlify\.app$/,
-    /\.vercel\.app$/,
-    /\.onrender\.com$/
-  ],
+// CORS configuration - Allow all origins for production
+app.use(cors({
+  origin: true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
-};
-
-app.use(cors(corsOptions));
+}));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
