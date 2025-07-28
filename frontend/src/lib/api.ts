@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://car-rental-backend-5kg0l8xu7-victors-projects-7c5d1cc2.vercel.app/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://car-rental-backend-80qi.onrender.com/api';
 
 export interface Car {
   _id: string;
