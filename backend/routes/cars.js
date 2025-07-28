@@ -78,15 +78,21 @@ router.post('/', auth, upload.fields([
 
     // Upload videos
     if (req.files && req.files.videos) {
+      console.log(`Processing ${req.files.videos.length} videos`);
       for (const file of req.files.videos) {
         try {
+          console.log(`Uploading video: ${file.originalname}`);
           const videoUrl = await uploadVideo(imagekit, file);
+          console.log(`Video uploaded successfully: ${videoUrl}`);
           car.videos.push(videoUrl);
         } catch (error) {
           console.error(`Error uploading video: ${file.originalname}`, error);
           // Continue with other videos even if one fails
         }
       }
+      console.log(`Total videos after upload: ${car.videos.length}`);
+    } else {
+      console.log('No videos found in request');
     }
 
     await car.save();
@@ -134,16 +140,21 @@ router.put('/:id', auth, upload.fields([
 
     // Add new videos
     if (req.files && req.files.videos) {
+      console.log(`Updating car: ${car._id}, processing ${req.files.videos.length} videos`);
       for (const file of req.files.videos) {
         try {
-          console.log(`Updating car: ${car._id}, processing video upload`);
+          console.log(`Uploading video: ${file.originalname}`);
           const videoUrl = await uploadVideo(imagekit, file);
+          console.log(`Video uploaded successfully: ${videoUrl}`);
           car.videos.push(videoUrl);
         } catch (error) {
           console.error(`Error uploading video: ${file.originalname}`, error);
           // Continue with other videos even if one fails
         }
       }
+      console.log(`Total videos after update: ${car.videos.length}`);
+    } else {
+      console.log('No videos found in update request');
     }
 
     await car.save();
