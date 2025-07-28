@@ -2,14 +2,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-// Admin user schema (simple version)
-const adminSchema = new mongoose.Schema({
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  role: { type: String, default: 'admin' }
-});
-
-const Admin = mongoose.model('Admin', adminSchema);
+const User = require('./models/User');
 
 async function createAdmin() {
   try {
@@ -21,9 +14,9 @@ async function createAdmin() {
     const hashedPassword = await bcrypt.hash('0a0b0c0d', 10);
 
     // Create admin user
-    const admin = new Admin({
+    const admin = new User({
       email: 'pattrentalservices@gmail.com',
-      password: hashedPassword,
+      password: '0a0b0c0d',
       role: 'admin'
     });
 
