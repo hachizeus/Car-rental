@@ -20,10 +20,15 @@ const imagekit = new ImageKit({
 // Get all cars
 router.get('/', async (req, res) => {
   try {
-    const cars = await Car.find().sort({ createdAt: -1 });
+    const cars = await Car.find().sort({ createdAt: -1 }).maxTimeMS(20000);
     res.json(cars);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching cars:', error);
+    if (error.name === 'MongooseError' || error.message.includes('buffering timed out')) {
+      res.status(503).json({ error: 'Database connection timeout. Please try again.' });
+    } else {
+      res.status(500).json({ error: error.message });
+    }
   }
 });
 
