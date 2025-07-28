@@ -49,6 +49,27 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
+// MongoDB connection test
+app.get('/test-db', async (req, res) => {
+  try {
+    const dbState = mongoose.connection.readyState;
+    const states = { 0: 'disconnected', 1: 'connected', 2: 'connecting', 3: 'disconnecting' };
+    
+    // Try a simple ping
+    if (dbState === 1) {
+      await mongoose.connection.db.admin().ping();
+    }
+    
+    res.json({ 
+      database: states[dbState],
+      dbName: mongoose.connection.db?.databaseName || 'unknown',
+      mongoUri: process.env.MONGODB_URI ? 'Present' : 'Missing'
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/cars', carRoutes);
@@ -64,17 +85,17 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Server error' });
 });
 
-// MongoDB connection with timeout settings
-mongoose.connect(process.env.MONGODB_URI, {
-  serverSelectionTimeoutMS: 30000,
-  socketTimeoutMS: 45000,
-  maxPoolSize: 10,
-  minPoolSize: 5
-})
-  .then(() => console.log('✅ Connected to MongoDB'))
+// MongoDB connection with basic settings
+console.log('Attempting MongoDB connection...');
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log('✅ Connected to MongoDB successfully');
+    console.log('Database:', mongoose.connection.db.databaseName);
+  })
   .catch(err => {
-    console.error('❌ MongoDB connection error:', err);
-    process.exit(1);
+    console.error('❌ MongoDB connection failed:', err.message);
+    console.error('Connection string:', process.env.MONGODB_URI ? 'Present' : 'Missing');
+    // Don't exit, let the app run and show the error
   });
 
 // Start server
