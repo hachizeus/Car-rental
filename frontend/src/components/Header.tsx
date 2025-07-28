@@ -9,6 +9,7 @@ import logo from "@/assets/images/logo.png";
 
 export const Header = () => {
   const [themeDropdown, setThemeDropdown] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { theme, setTheme } = useTheme();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
@@ -17,6 +18,16 @@ export const Header = () => {
     setTheme(newTheme);
     setThemeDropdown(false);
   };
+
+  // Handle scroll detection
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 500);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -33,7 +44,7 @@ export const Header = () => {
   }, []);
 
   return (
-    <header className="bg-white/10 dark:bg-black/10 backdrop-blur-md shadow-soft absolute top-0 left-0 right-0 z-50 border-b border-white/20 dark:border-white/10 transition-all duration-300">
+    <header className="bg-white/10 dark:bg-black/10 backdrop-blur-md shadow-soft fixed top-0 left-0 right-0 z-50 border-b border-white/20 dark:border-white/10 transition-all duration-300">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-1.5 sm:py-2 flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2 group">
           <img 
@@ -41,7 +52,9 @@ export const Header = () => {
             alt="Pattrentals Logo" 
             className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform duration-300"
           />
-          <div className="text-base sm:text-lg font-bold text-white">
+          <div className={`text-base sm:text-lg font-bold transition-colors duration-300 ${
+            theme === 'light' && scrolled ? 'text-black' : 'text-white'
+          }`}>
             Pattrentals
           </div>
         </Link>
@@ -51,8 +64,8 @@ export const Header = () => {
             to="/" 
             className={`relative transition-all duration-300 font-medium text-sm py-1.5 px-2 rounded-lg group ${
               location.pathname === '/' 
-                ? 'text-brand-400 bg-white/20' 
-                : 'text-white hover:text-brand-400 hover:bg-white/20'
+                ? 'text-brand-400 bg-white/20 dark:bg-white/20' 
+                : `${theme === 'light' && location.pathname === '/' && !scrolled ? 'text-white' : 'text-gray-900 dark:text-white'} hover:text-brand-400 hover:bg-red-500/20 dark:hover:bg-red-500/20`
             }`}
           >
             Home
@@ -64,8 +77,8 @@ export const Header = () => {
             to="/fleet" 
             className={`relative transition-all duration-300 font-medium text-sm py-1.5 px-2 rounded-lg group ${
               location.pathname === '/fleet' 
-                ? 'text-brand-400 bg-white/20' 
-                : 'text-white hover:text-brand-400 hover:bg-white/20'
+                ? 'text-brand-400 bg-white/20 dark:bg-white/20' 
+                : `${theme === 'light' && location.pathname === '/' && !scrolled ? 'text-white' : 'text-gray-900 dark:text-white'} hover:text-brand-400 hover:bg-red-500/20 dark:hover:bg-red-500/20`
             }`}
           >
             Fleet
@@ -77,8 +90,8 @@ export const Header = () => {
             to="/services" 
             className={`relative transition-all duration-300 font-medium text-sm py-1.5 px-2 rounded-lg group ${
               location.pathname === '/services' 
-                ? 'text-brand-400 bg-white/20' 
-                : 'text-white hover:text-brand-400 hover:bg-white/20'
+                ? 'text-brand-400 bg-white/20 dark:bg-white/20' 
+                : `${theme === 'light' && location.pathname === '/' && !scrolled ? 'text-white' : 'text-gray-900 dark:text-white'} hover:text-brand-400 hover:bg-red-500/20 dark:hover:bg-red-500/20`
             }`}
           >
             Services
@@ -90,8 +103,8 @@ export const Header = () => {
             to="/about" 
             className={`relative transition-all duration-300 font-medium text-sm py-1.5 px-2 rounded-lg group ${
               location.pathname === '/about' 
-                ? 'text-brand-400 bg-white/20' 
-                : 'text-white hover:text-brand-400 hover:bg-white/20'
+                ? 'text-brand-400 bg-white/20 dark:bg-white/20' 
+                : `${theme === 'light' && location.pathname === '/' && !scrolled ? 'text-white' : 'text-gray-900 dark:text-white'} hover:text-brand-400 hover:bg-red-500/20 dark:hover:bg-red-500/20`
             }`}
           >
             About
@@ -103,8 +116,8 @@ export const Header = () => {
             to="/contact" 
             className={`relative transition-all duration-300 font-medium text-sm py-1.5 px-2 rounded-lg group ${
               location.pathname === '/contact' 
-                ? 'text-brand-400 bg-white/20' 
-                : 'text-white hover:text-brand-400 hover:bg-white/20'
+                ? 'text-brand-400 bg-white/20 dark:bg-white/20' 
+                : `${theme === 'light' && location.pathname === '/' && !scrolled ? 'text-white' : 'text-gray-900 dark:text-white'} hover:text-brand-400 hover:bg-red-500/20 dark:hover:bg-red-500/20`
             }`}
           >
             Contact
@@ -118,7 +131,7 @@ export const Header = () => {
           <div className="relative hidden sm:block" ref={dropdownRef}>
             <button
               onClick={() => setThemeDropdown(!themeDropdown)}
-              className="flex items-center space-x-1 text-white hover:text-brand-400 transition-all duration-300 font-medium text-sm py-1.5 px-2 rounded-lg hover:bg-white/20 shadow-soft hover:shadow-medium"
+              className={`flex items-center space-x-1 ${theme === 'light' && location.pathname === '/' && !scrolled ? 'text-white' : 'text-gray-900 dark:text-white'} hover:text-brand-400 transition-all duration-300 font-medium text-sm py-1.5 px-2 rounded-lg hover:bg-white/20 dark:hover:bg-white/20 shadow-soft hover:shadow-medium`}
             >
               {theme === 'light' ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
               <span className="capitalize hidden sm:inline text-xs">{theme}</span>
@@ -128,8 +141,8 @@ export const Header = () => {
               <div className="absolute right-0 mt-2 w-36 sm:w-40 glass dark:glass-dark rounded-xl shadow-strong z-50 animate-scale-in">
                 <button
                   onClick={() => toggleTheme('light')}
-                  className={`flex items-center space-x-2 w-full px-4 py-3 text-left hover:bg-white/20 transition-all duration-300 rounded-lg ${
-                    theme === 'light' ? 'bg-white/20 text-brand-400' : 'text-white'
+                  className={`flex items-center space-x-2 w-full px-4 py-3 text-left hover:bg-white/20 dark:hover:bg-white/20 transition-all duration-300 rounded-lg ${
+                    theme === 'light' ? 'bg-white/20 text-brand-400' : 'text-gray-900 dark:text-white'
                   }`}
                 >
                   <Sun className="w-4 h-4" />
@@ -137,8 +150,8 @@ export const Header = () => {
                 </button>
                 <button
                   onClick={() => toggleTheme('dark')}
-                  className={`flex items-center space-x-2 w-full px-4 py-3 text-left hover:bg-white/20 transition-all duration-300 rounded-lg ${
-                    theme === 'dark' ? 'bg-white/20 text-brand-400' : 'text-white'
+                  className={`flex items-center space-x-2 w-full px-4 py-3 text-left hover:bg-white/20 dark:hover:bg-white/20 transition-all duration-300 rounded-lg ${
+                    theme === 'dark' ? 'bg-white/20 text-brand-400' : 'text-gray-900 dark:text-white'
                   }`}
                 >
                   <Moon className="w-4 h-4" />

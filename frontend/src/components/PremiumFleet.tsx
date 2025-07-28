@@ -59,7 +59,7 @@ export const PremiumFleet = () => {
   };
 
   return (
-    <section className="py-12 sm:py-16 bg-white dark:bg-[#141414]">
+    <section className="py-12 sm:py-16 bg-gray-200 dark:bg-[#141414]">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12" ref={titleRef}>
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">Our Premium Fleet</h2>

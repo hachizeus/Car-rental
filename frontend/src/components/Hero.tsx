@@ -48,12 +48,12 @@ export const Hero = () => {
                     <Star key={i} className="w-2 h-2 sm:w-3 sm:h-3 fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
-                <span className="text-gray-600 dark:text-gray-300 ml-1 text-xs sm:text-sm">Trusted</span>
+                <span className="text-white ml-1 text-xs sm:text-sm">Trusted</span>
               </div>
               <div className="w-px h-3 bg-gray-300 dark:bg-gray-600"></div>
               <div className="flex items-center space-x-1">
                 <MapPin className="w-2 h-2 sm:w-3 sm:h-3 text-brand-600" />
-                <span className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm">Kenya Wide</span>
+                <span className="text-white text-xs sm:text-sm">Kenya Wide</span>
               </div>
             </div>
             

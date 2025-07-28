@@ -73,25 +73,7 @@ const Dashboard = () => {
                   <span className="text-white font-semibold">{availableCars}</span>
                 </div>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-300">Rented Cars</span>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                  <span className="text-white font-semibold">{rentedCars}</span>
-                </div>
-              </div>
-              <div className="pt-4 border-t border-gray-700">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-gray-300">Utilization Rate</span>
-                  <span className="text-white font-semibold">{totalCars > 0 ? Math.round((rentedCars / totalCars) * 100) : 0}%</span>
-                </div>
-                <div className="bg-gray-700 rounded-full h-2">
-                  <div 
-                    className="bg-red-500 h-2 rounded-full" 
-                    style={{ width: `${totalCars > 0 ? (rentedCars / totalCars) * 100 : 0}%` }}
-                  ></div>
-                </div>
-              </div>
+
             </div>
           </CardContent>
         </Card>
