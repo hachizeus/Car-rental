@@ -38,7 +38,8 @@ const fetchWithRetry = async (url: string, options: RequestInit, retries = 3): P
       const response = await fetch(url, {
         ...options,
         headers: {
-          'Content-Type': 'application/json',
+          // Don't set Content-Type for FormData - browser will set it automatically
+          ...(options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
           ...options.headers,
         },
       });
