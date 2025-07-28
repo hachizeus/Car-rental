@@ -49,6 +49,17 @@ router.post('/', auth, upload.fields([
   { name: 'videos', maxCount: 5 }
 ]), async (req, res) => {
   try {
+    console.log('=== NEW CAR REQUEST ===');
+    console.log('Request body keys:', Object.keys(req.body));
+    console.log('Request files:', req.files ? Object.keys(req.files) : 'No files');
+    if (req.files) {
+      Object.entries(req.files).forEach(([key, files]) => {
+        console.log(`${key}: ${files.length} files`);
+        files.forEach((file, index) => {
+          console.log(`  File ${index}: ${file.originalname} (${file.size} bytes, ${file.mimetype})`);
+        });
+      });
+    }
     const carData = {
       ...req.body,
       features: req.body.features ? req.body.features.split(',').map(f => f.trim()) : [],
@@ -113,6 +124,18 @@ router.put('/:id', auth, upload.fields([
   { name: 'videos', maxCount: 5 }
 ]), async (req, res) => {
   try {
+    console.log('=== UPDATE CAR REQUEST ===');
+    console.log('Car ID:', req.params.id);
+    console.log('Request body keys:', Object.keys(req.body));
+    console.log('Request files:', req.files ? Object.keys(req.files) : 'No files');
+    if (req.files) {
+      Object.entries(req.files).forEach(([key, files]) => {
+        console.log(`${key}: ${files.length} files`);
+        files.forEach((file, index) => {
+          console.log(`  File ${index}: ${file.originalname} (${file.size} bytes, ${file.mimetype})`);
+        });
+      });
+    }
     const car = await Car.findById(req.params.id);
     if (!car) return res.status(404).json({ error: 'Car not found' });
 

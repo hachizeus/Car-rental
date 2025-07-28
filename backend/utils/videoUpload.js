@@ -39,8 +39,10 @@ const uploadVideo = async (imagekit, file) => {
     const result = await imagekit.upload(uploadOptions);
     console.log(`Video uploaded successfully: ${result.url}`);
     
-    // Return the URL with a query parameter to help with CORS and caching
-    return `${result.url}?tr=f-auto`;
+    // Return the URL - ensure it's a valid string
+    const videoUrl = result.url || result.fileId;
+    console.log(`Video upload result:`, { url: result.url, fileId: result.fileId, name: result.name });
+    return videoUrl;
   } catch (error) {
     console.error(`Error uploading video: ${file.originalname}`, error);
     throw error;
