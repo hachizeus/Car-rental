@@ -54,7 +54,7 @@ const fetchWithRetry = async (url: string, options: RequestInit, retries = 3): P
 export const api = {
   // Auth
   login: async (email: string, password: string) => {
-    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -65,7 +65,7 @@ export const api = {
 
   // Cars
   getCars: async (): Promise<Car[]> => {
-    const response = await fetchWithRetry(`${API_BASE_URL}/cars`, {
+    const response = await fetchWithRetry(`${API_BASE_URL}/api/cars`, {
       method: 'GET',
     });
     if (!response.ok) throw new Error('Failed to fetch cars');
@@ -73,13 +73,13 @@ export const api = {
   },
 
   getCar: async (id: string): Promise<Car> => {
-    const response = await fetch(`${API_BASE_URL}/cars/${id}`);
+    const response = await fetch(`${API_BASE_URL}/api/cars/${id}`);
     if (!response.ok) throw new Error('Failed to fetch car');
     return response.json();
   },
 
   addCar: async (formData: FormData): Promise<Car> => {
-    const response = await fetchWithRetry(`${API_BASE_URL}/cars`, {
+    const response = await fetchWithRetry(`${API_BASE_URL}/api/cars`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${getAuthToken()}`
@@ -91,7 +91,7 @@ export const api = {
   },
 
   updateCar: async (id: string, formData: FormData): Promise<Car> => {
-    const response = await fetch(`${API_BASE_URL}/cars/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/api/cars/${id}`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${getAuthToken()}`
@@ -103,7 +103,7 @@ export const api = {
   },
 
   deleteCar: async (id: string): Promise<void> => {
-    const response = await fetch(`${API_BASE_URL}/cars/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/api/cars/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${getAuthToken()}`
@@ -113,7 +113,7 @@ export const api = {
   },
 
   deleteImage: async (carId: string, imageIndex: number): Promise<void> => {
-    const response = await fetch(`${API_BASE_URL}/cars/${carId}/image/${imageIndex}`, {
+    const response = await fetch(`${API_BASE_URL}/api/cars/${carId}/image/${imageIndex}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${getAuthToken()}`
@@ -131,7 +131,7 @@ export const api = {
       
       // Add timestamp to prevent caching
       const timestamp = Date.now();
-      const response = await fetch(`${API_BASE_URL}/cars/${carId}/video/${videoIndex}?t=${timestamp}`, {
+      const response = await fetch(`${API_BASE_URL}/api/cars/${carId}/video/${videoIndex}?t=${timestamp}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${getAuthToken()}`,
