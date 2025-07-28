@@ -64,6 +64,10 @@ const CarList = () => {
                   {car.is_available ? 'Available' : 'Unavailable'}
                 </span>
               </div>
+              <div className="flex gap-4 text-xs text-gray-400 mt-1">
+                <span>{car.images?.length || 0} images</span>
+                <span>{car.videos?.length || 0} videos</span>
+              </div>
             </CardHeader>
             <CardContent>
               <p className="text-gray-300 mb-4 line-clamp-2">{car.description}</p>
