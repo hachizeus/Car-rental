@@ -57,7 +57,7 @@ const Fleet = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-br from-brand-50 to-white dark:from-gray-900 dark:to-[#141414] relative overflow-hidden">
+      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-brand-50 to-white dark:from-gray-900 dark:to-[#141414] relative overflow-hidden">
         {/* Background Animations */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 opacity-30 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48cGF0aCBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9Ii4zIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik01IDEwYTIgMiAwIDAgMC0yIDJ2MzhhMiAyIDAgMCAwIDIgMmgzOFYxMHptMzgtMkg1Yy0yLjE5IDAtNCAxLjgxLTQgNHYzOGMwIDIuMTkgMS43OSA0IDQgNGg0MWEyIDIgMCAwIDAgMi0yVjEwYTIgMiAwIDAgMC0yLTJ6Ii8+PC9zdmc+')] animate-pulse"></div>
@@ -67,10 +67,10 @@ const Fleet = () => {
           <div className="absolute bottom-32 right-1/3 w-8 h-8 bg-brand-600/25 rounded-full animate-bounce" style={{ animationDelay: '0.5s', animationDuration: '3.5s' }}></div>
         </div>
         
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center animate-fade-in">
-            <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-6">Our Premium Fleet</h1>
-            <p className="text-gray-600 dark:text-gray-300 text-xl max-w-2xl mx-auto">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6">Our Premium Fleet</h1>
+            <p className="text-gray-600 dark:text-gray-300 text-lg sm:text-xl max-w-2xl mx-auto px-4">
               Choose from our extensive collection of well-maintained vehicles for every occasion
             </p>
           </div>
@@ -78,9 +78,9 @@ const Fleet = () => {
       </section>
 
       {/* Search and Filter Section */}
-      <section className="py-8 bg-gray-50 dark:bg-[#141414]">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto space-y-6">
+      <section className="py-6 sm:py-8 bg-gray-50 dark:bg-[#141414]">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
             {/* Search Bar */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -94,7 +94,7 @@ const Fleet = () => {
             </div>
             
             {/* Filters */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* Category Filter */}
               <div>
                 <label className="block text-sm font-medium mb-2 text-gray-900 dark:text-gray-100">Category</label>
@@ -144,9 +144,9 @@ const Fleet = () => {
       </section>
 
       {/* Cars Grid */}
-      <section className="py-16 bg-white dark:bg-[#141414]">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <section className="py-8 sm:py-12 lg:py-16 bg-white dark:bg-[#141414]">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {filteredCars.map((car, index) => (
               <Card 
                 key={car.id} 
@@ -178,14 +178,14 @@ const Fleet = () => {
                   <Badge className="absolute top-4 left-4 bg-brand-600">{car.category}</Badge>
                 </div>
                 
-                <div className="p-6">
+                <div className="p-4 sm:p-6">
                   <div className="mb-4">
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white">{car.title}</h3>
                   </div>
                   
                   <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">{car.description}</p>
                   
-                  <div className="grid grid-cols-2 gap-3 mb-4">
+                  <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-4">
                     <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-300">
                       <Fuel className="w-4 h-4 text-brand-600" />
                       <span>{car.fuel_type || 'Petrol'}</span>
@@ -206,13 +206,13 @@ const Fleet = () => {
                     )}
                   </div>
                   
-                  <div className="flex justify-between items-center">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
                     <div>
-                      <span className="text-2xl font-bold text-brand-600">KSh {car.price_per_day.toLocaleString()}</span>
+                      <span className="text-xl sm:text-2xl font-bold text-brand-600">KSh {car.price_per_day.toLocaleString()}</span>
                       <span className="text-gray-600 dark:text-gray-300">/day</span>
                     </div>
                     <Button 
-                      className="bg-brand-600 hover:bg-brand-700"
+                      className="bg-brand-600 hover:bg-brand-700 w-full sm:w-auto"
                       disabled={!car.is_available}
                       onClick={(e) => {
                         e.stopPropagation();

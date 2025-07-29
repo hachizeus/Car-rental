@@ -103,18 +103,18 @@ const AddCar = () => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Add New Car</h1>
-        <p className="text-gray-600 dark:text-gray-400">Add a new car to your fleet</p>
+    <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">Add New Car</h1>
+        <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">Add a new car to your fleet</p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Car Details</CardTitle>
+      <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+        <CardHeader className="p-4 sm:p-6">
+          <CardTitle className="text-lg sm:text-xl text-gray-900 dark:text-gray-100">Car Details</CardTitle>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <CardContent className="p-4 sm:p-6">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             <div>
               <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Title</label>
               <Input
@@ -135,7 +135,7 @@ const AddCar = () => {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Price per Day (KSh)</label>
                 <Input
@@ -180,7 +180,7 @@ const AddCar = () => {
 
             <div>
               <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Specifications</label>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium mb-1 text-gray-600 dark:text-gray-400">Engine</label>
                   <Input
@@ -318,11 +318,20 @@ const AddCar = () => {
               <label htmlFor="available" className="text-sm font-medium text-gray-700 dark:text-gray-300">Available for rent</label>
             </div>
 
-            <div className="flex gap-4 pt-4">
-              <Button type="submit" disabled={addMutation.isPending || uploading}>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
+              <Button 
+                type="submit" 
+                disabled={addMutation.isPending || uploading}
+                className="w-full sm:w-auto order-2 sm:order-1"
+              >
                 {uploading ? 'Uploading...' : addMutation.isPending ? 'Adding...' : 'Add Car'}
               </Button>
-              <Button type="button" variant="outline" onClick={() => navigate('/cars')}>
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => navigate('/cars')}
+                className="w-full sm:w-auto order-1 sm:order-2"
+              >
                 Cancel
               </Button>
             </div>
