@@ -11,6 +11,7 @@ import EditCar from "./pages/EditCar"
 import Login from "./pages/Login"
 
 
+
 const queryClient = new QueryClient()
 
 const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
@@ -158,6 +159,7 @@ const App = () => {
               <Route path="/cars" element={<ProtectedRoute><CarList /></ProtectedRoute>} />
               <Route path="/cars/add" element={<ProtectedRoute><AddCar /></ProtectedRoute>} />
               <Route path="/cars/edit/:id" element={<ProtectedRoute><EditCar /></ProtectedRoute>} />
+
             </Routes>
           </main>
         </div>

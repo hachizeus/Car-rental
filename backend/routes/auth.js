@@ -16,8 +16,8 @@ router.post('/login', async (req, res) => {
 
     const token = jwt.sign(
       { userId: user._id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: '24h' }
+      process.env.JWT_SECRET
+      // No expiration - admin stays logged in forever
     );
 
     res.json({ token, user: { id: user._id, email: user.email } });

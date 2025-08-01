@@ -83,10 +83,13 @@ const CarDetails = () => {
               {car.images && car.images.length > 0 ? (
                 <>
                   <img 
-                    src={car.images[currentImageIndex]?.url} 
+                    src={`${car.images[currentImageIndex]?.url}?tr=w-800,h-600,q-80,f-webp`}
                     alt={car.title}
                     loading="lazy"
                     className="main-car-image w-full h-96 object-cover rounded-2xl"
+                    onError={(e) => {
+                      e.currentTarget.src = car.images[currentImageIndex]?.url;
+                    }}
                   />
                   
                   {/* Navigation Buttons */}
@@ -129,14 +132,18 @@ const CarDetails = () => {
                 {car.images.map((img, index) => (
                   <img 
                     key={index}
-                    src={img.url} 
+                    src={`${img.url}?tr=w-160,h-120,q-70,f-webp`}
                     alt={`${car.title} ${index + 1}`}
+                    loading="lazy"
                     className={`w-20 h-16 object-cover rounded-lg cursor-pointer transition-all ${
                       index === currentImageIndex 
                         ? 'ring-2 ring-brand-600 opacity-100' 
                         : 'opacity-70 hover:opacity-100'
                     }`}
                     onClick={() => setCurrentImageIndex(index)}
+                    onError={(e) => {
+                      e.currentTarget.src = img.url;
+                    }}
                   />
                 ))}
               </div>

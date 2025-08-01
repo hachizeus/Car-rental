@@ -11,7 +11,9 @@ const CarList = () => {
 
   const { data: cars, isLoading } = useQuery({
     queryKey: ['cars'],
-    queryFn: api.getCars
+    queryFn: api.getCars,
+    staleTime: 0,
+    cacheTime: 0
   })
 
   const deleteMutation = useMutation({
@@ -50,9 +52,13 @@ const CarList = () => {
             {primaryImage && (
               <div className="h-48 overflow-hidden">
                 <img 
-                  src={primaryImage} 
+                  src={`${primaryImage}?tr=w-400,h-300,q-70,f-webp`}
                   alt={car.title}
+                  loading="lazy"
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = primaryImage;
+                  }}
                 />
               </div>
             )}

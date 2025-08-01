@@ -211,7 +211,14 @@ router.delete('/:id/image/:imageIndex', auth, async (req, res) => {
     
     const imageIndex = parseInt(req.params.imageIndex);
     if (imageIndex >= 0 && imageIndex < car.images.length) {
+      const wasDeleted = car.images[imageIndex];
       car.images.splice(imageIndex, 1);
+      
+      // If we deleted the primary image and there are still images left, make the first one primary
+      if (wasDeleted.is_primary && car.images.length > 0) {
+        car.images[0].is_primary = true;
+      }
+      
       await car.save();
       res.json({ message: 'Image deleted successfully' });
     } else {

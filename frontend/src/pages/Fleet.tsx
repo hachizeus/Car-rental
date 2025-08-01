@@ -21,7 +21,9 @@ const Fleet = () => {
 
   const { data: cars = [], isLoading } = useQuery({
     queryKey: ['cars'],
-    queryFn: api.getCars
+    queryFn: api.getCars,
+    staleTime: 0,
+    cacheTime: 0
   })
 
   // Filter cars based on search and filters
@@ -159,10 +161,13 @@ const Fleet = () => {
                     const primaryImage = car.images?.find(img => img.is_primary)?.url
                     return primaryImage ? (
                       <img 
-                        src={primaryImage} 
+                        src={`${primaryImage}?tr=w-400,h-300,q-70,f-webp`}
                         alt={car.title}
                         loading="lazy"
                         className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          e.currentTarget.src = primaryImage;
+                        }}
                       />
                     ) : (
                       <div className="w-full h-48 bg-gray-200 flex items-center justify-center">

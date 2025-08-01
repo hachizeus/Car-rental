@@ -87,7 +87,11 @@ export const api = {
       },
       body: formData
     });
-    if (!response.ok) throw new Error('Failed to add car');
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error('Add car error response:', errorData);
+      throw new Error(`Failed to add car: ${response.status} - ${errorData}`);
+    }
     return response.json();
   },
 
@@ -124,30 +128,12 @@ export const api = {
   },
 
   deleteVideo: async (carId: string, videoIndex: number): Promise<void> => {
-    return withErrorHandling(async () => {
-      // Validate inputs before making the request
-      if (!carId || videoIndex === undefined || videoIndex < 0) {
-        throw new Error('Invalid car ID or video index');
+    const response = await fetch(`${API_BASE_URL}/api/cars/${carId}/video/${videoIndex}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`
       }
-      
-      // Add timestamp to prevent caching
-      const timestamp = Date.now();
-      const response = await fetch(`${API_BASE_URL}/api/cars/${carId}/video/${videoIndex}?t=${timestamp}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${getAuthToken()}`,
-          'Content-Type': 'application/json',
-          'Cache-Control': 'no-cache, no-store'
-        }
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || 'Failed to delete video');
-      }
-      
-      // Return the response data
-      return await response.json();
-    }, 'Failed to delete video');
+    });
+    if (!response.ok) throw new Error('Failed to delete video');
   }
 };
