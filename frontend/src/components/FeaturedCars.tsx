@@ -13,7 +13,9 @@ export const FeaturedCars = () => {
 
   const { data: allCars = [], isLoading } = useQuery({
     queryKey: ['featured-cars'],
-    queryFn: api.getCars
+    queryFn: api.getCars,
+    staleTime: 5 * 60 * 1000,
+    cacheTime: 10 * 60 * 1000
   })
 
   const cars = allCars.filter(car => car.is_available).slice(0, 6)
@@ -63,10 +65,13 @@ export const FeaturedCars = () => {
                   const primaryImage = car.images?.find(img => img.is_primary)?.url
                   return primaryImage ? (
                     <img 
-                      src={primaryImage} 
+                      src={`${primaryImage}?tr=w-400,h-300,q-70,f-webp`}
                       alt={car.title}
                       loading="lazy"
                       className="w-full h-48 sm:h-56 object-cover group-hover:scale-110 transition-transform duration-500"
+                      onError={(e) => {
+                        e.currentTarget.src = primaryImage;
+                      }}
                     />
                   ) : (
                     <div className="w-full h-48 sm:h-56 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700 flex items-center justify-center">

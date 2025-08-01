@@ -27,9 +27,24 @@ export interface Car {
 export const api = {
   // Get all cars
   getCars: async (): Promise<Car[]> => {
-    const response = await fetch(`${API_BASE_URL}/cars`);
-    if (!response.ok) throw new Error('Failed to fetch cars');
-    return response.json();
+    try {
+      const response = await fetch(`${API_BASE_URL}/cars`, {
+        headers: {
+          'Cache-Control': 'max-age=300'
+        },
+        timeout: 10000
+      });
+      if (!response.ok) {
+        if (response.status === 502) {
+          throw new Error('Backend server is temporarily unavailable');
+        }
+        throw new Error(`Server error: ${response.status}`);
+      }
+      return response.json();
+    } catch (error) {
+      console.error('API Error:', error);
+      throw error;
+    }
   },
 
   // Get car by ID

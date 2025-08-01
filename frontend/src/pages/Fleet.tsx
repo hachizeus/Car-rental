@@ -22,8 +22,8 @@ const Fleet = () => {
   const { data: cars = [], isLoading } = useQuery({
     queryKey: ['cars'],
     queryFn: api.getCars,
-    staleTime: 0,
-    cacheTime: 0
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    cacheTime: 10 * 60 * 1000 // 10 minutes
   })
 
   // Filter cars based on search and filters
@@ -38,11 +38,38 @@ const Fleet = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-900">
+      <div className="min-h-screen bg-white dark:bg-[#141414]">
         <Header />
-        <div className="py-20 text-center">
-          <p className="text-xl text-gray-600 dark:text-gray-300">Loading cars...</p>
-        </div>
+        <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-brand-50 to-white dark:from-gray-900 dark:to-[#141414]">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center animate-fade-in">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6">Our Premium Fleet</h1>
+              <p className="text-gray-600 dark:text-gray-300 text-lg sm:text-xl max-w-2xl mx-auto px-4">
+                Choose from our extensive collection of well-maintained vehicles
+              </p>
+            </div>
+          </div>
+        </section>
+        <section className="py-8 sm:py-12 lg:py-16 bg-white dark:bg-[#141414]">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="animate-pulse bg-white dark:bg-[#1a1a1a] rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-600">
+                  <div className="bg-gray-200 dark:bg-gray-700 h-48"></div>
+                  <div className="p-6 space-y-3">
+                    <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+                    <div className="flex space-x-2">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
+                    </div>
+                    <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
         <Footer />
       </div>
     )
@@ -234,18 +261,24 @@ const Fleet = () => {
             ))}
           </div>
           
-          {filteredCars.length === 0 && (
+          {filteredCars.length === 0 && !isLoading && (
             <div className="text-center py-12">
-              <p className="text-xl text-gray-600 dark:text-gray-300 mb-4">No cars found matching your criteria</p>
+              <p className="text-xl text-gray-600 dark:text-gray-300 mb-4">
+                {cars.length === 0 ? 'Unable to load cars. Please try again later.' : 'No cars found matching your criteria'}
+              </p>
               <Button 
                 onClick={() => {
-                  setSearchTerm("");
-                  setSelectedCategory("All");
-                  setPriceRange({ min: 0, max: 50000 });
+                  if (cars.length === 0) {
+                    window.location.reload();
+                  } else {
+                    setSearchTerm("");
+                    setSelectedCategory("All");
+                    setPriceRange({ min: 0, max: 50000 });
+                  }
                 }}
                 variant="outline"
               >
-                Clear Filters
+                {cars.length === 0 ? 'Retry' : 'Clear Filters'}
               </Button>
             </div>
           )}
